@@ -1,4 +1,4 @@
-// Tabs logic for front-end
+staas// Tabs logic for front-end
 const tabs = document.querySelectorAll("[data-tab-target]");
 const tabContents = document.querySelectorAll("[data-tab-content]");
 tabs.forEach((tab) => {
