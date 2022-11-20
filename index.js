@@ -3,6 +3,7 @@ const app = express();
 const port = 4000;
 const router = express.Router();
 const csv = require("csv-parser");
+const Fuse = require('fuse.js');
 
 const fs = require("fs");
 var genres = [];
@@ -34,7 +35,7 @@ fs.createReadStream("lab3-data/raw_artists.csv")
   .on("data", (data) => artists.push(data))
   .on("end", () => {
     //Filtering array
-    var slicedArtists = artists.slice(0, 15);
+    var slicedArtists = artists.slice(0, 500);
     slicedArtists = slicedArtists.map(artistsProperties);
     //console.log(slicedArtists);
     artists = slicedArtists;
@@ -66,7 +67,7 @@ fs.createReadStream("lab3-data/raw_tracks.csv")
   .on("data", (data) => tracks.push(data))
   .on("end", () => {
     //Filtering array
-    var slicedTracks = tracks.slice(0, 15);
+    var slicedTracks = tracks.slice(0, 500);
     slicedTracks = slicedTracks.map(tracksProperties);
     //console.log(slicedTracks);
     tracks = slicedTracks;
@@ -108,7 +109,7 @@ fs.createReadStream("lab3-data/raw_albums.csv")
   .on("data", (data) => albums.push(data))
   .on("end", () => {
     //Filtering array
-    var slicedAlbums = albums.slice(0, 15);
+    var slicedAlbums = albums.slice(0, 500);
     slicedAlbums = slicedAlbums.map(albumProperties);
     albums = slicedAlbums;
   });
@@ -135,6 +136,59 @@ app.get("/api/albums", (req, res) => {
   res.send(albums);
 });
 
+// unauthenticated user search --------------------------
+// search for tracks based on any combination of track title, artist, band, or genre
+app.get('/api/tracks/:unauthSearch', (req, res) => {
+  const input = req.params.unauthSearch; // storing the search input
+  var trackResults = []; // storing the resulting tracks for the input
+
+  const options = {
+    keys: [
+      'track_title',
+      'artist_name',
+      'album_title',
+      'track_genres'
+    ],
+    includeScore: true, // include fuzziness score - 0 = perfect match, 1 = no match
+    shouldSort: true, // sorts by fuzziness (least to most)
+    isCaseSensitive: false,
+    findAllMatches: false, // stops search if a perfect match is found
+  };
+
+  const fuse = new Fuse(tracks, options);
+
+  var results = fuse.search(input);
+
+  // looping through the fuzzy search results array
+  for(var i=0; i<results.length; i++){
+    // only storing the search results with a score <= 0.4
+    if(results[i].score <= 0.4){
+      trackResults.push(results[i]);
+    }
+    // if there are many search results, only show the 30 best matches
+    if(trackResults.length >= 30){
+      break;
+    }
+  }
+
+  // if if one or more matching tracks are found, send the trackResults array
+  if(trackResults.length > 0){
+    res.send(trackResults);
+  }
+  // if no matches are found, send the status and an error message
+  else{
+    res.status(404).send(`Track ${input} was not found!`);
+  }
+})
+
+
+
+// ------------------------------------------------------
+
+
+
+
+
 //Get Atrist info from ID
 app.get("/api/artists/info/:artistID", (req, res) => {
   const id = req.params.artistID;
@@ -146,6 +200,7 @@ app.get("/api/artists/info/:artistID", (req, res) => {
   }
 });
 
+/*
 // Get List of track Id's from searched track or album
 app.get("/api/tracks/:track_album", (req, res) => {
   const id = req.params.track_album.toLowerCase();
@@ -166,6 +221,7 @@ app.get("/api/tracks/:track_album", (req, res) => {
     res.status(404).send(`Track with ID ${id} was not found!`);
   }
 });
+*/
 
 // Get List for searched artist id's
 app.get("/api/artists/:artist_name", (req, res) => {
@@ -198,7 +254,7 @@ app.get("/api/artists/search/:artist_name", (req, res) => {
       let id2 = element;
       artist.push(id2);
     }
-    artist = artist.slice(0, 15);
+    artist = artist.slice(0, 500);
   });
   //Checks to see if any results were found
   if (artist.length != 0) {
@@ -219,7 +275,7 @@ app.get("/api/tracks/search1/:track", (req, res) => {
       let id2 = element;
       track.push(id2);
     }
-    track = track.slice(0, 15);
+    track = track.slice(0, 500);
   });
   //Checks to see if any results were found
   if (track.length != 0) {
@@ -239,7 +295,7 @@ app.get("/api/album/search/:album", (req, res) => {
       let id2 = element;
       album.push(id2);
     }
-    album = album.slice(0, 15);
+    album = album.slice(0, 500);
   });
   //Checks to see if any results were found
   if (album.length != 0) {
