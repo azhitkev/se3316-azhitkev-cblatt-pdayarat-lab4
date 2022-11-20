@@ -1,4 +1,4 @@
-const express = require("express");
+npconst express = require("express");
 const app = express();
 const port = 4000;
 const router = express.Router();
@@ -347,13 +347,25 @@ app.get("/createdb", (req, res) => {
 });
 //Create Table/playlist
 app.post("/createplaylist/:name", (req, res) => {
-  let sql = `CREATE TABLE IF NOT EXISTS ${req.params.name}(TrackID int, Track VARCHAR(255), Artist VARCHAR(255), Album VARCHAR(255), PlayTime VARCHAR(255))`;
+  let sql = `CREATE TABLE IF NOT EXISTS ${req.params.name}(TrackID int, Track VARCHAR(255), Artist VARCHAR(255), Album VARCHAR(255), PlayTime VARCHAR(255));
+  UPDATE playlist_data SET playlist_name =${req.params.name}, status = TRUE `;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send("Playlist  created...");
   });
 });
+
+
+
+
+
+
+
+
+
+
+
 //Insert songs
 app.post("/addtrack/:pName/:tID", (req, res) => {
   let playlistName = req.params.pName;
@@ -391,6 +403,7 @@ app.get("/playlists/list-names", (req, res) => {
     res.send(result);
   });
 });
+
 //Get songs in playlist
 app.get("/playlists/tracks/:pname", (req, res) => {
   let sql = `SELECT * FROM ${req.params.pname}`;
