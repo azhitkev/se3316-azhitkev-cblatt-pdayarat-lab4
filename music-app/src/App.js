@@ -4,13 +4,19 @@ import { Dashboard } from "./components/Dashboard";
 import { RouteGuard } from "./components/RouteGuard";
 
 import { history } from "./helpers/history";
+import { setAuthToken } from "./helpers/setAuthToken";
 
 function App() {
+  //check jwt token
+  const token = localStorage.getItem("token");
+  if (token) {
+    setAuthToken(token);
+  }
+
   return (
     <div className="wrapper">
       <Routes history={history}>
-        <Route path="/" element={<LoginPage />}></Route>
-        <Route path="/dashboard" element={<Dashboard />} />'
+        <Route path="/login" element={<LoginPage />}></Route>
         <Route
           path="/dashboard"
           element={

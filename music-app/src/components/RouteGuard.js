@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Navigate } from "react-router-dom";
+import { Dashboard } from "./Dashboard";
 
 export const RouteGuard = ({ children, Component }) => {
   function hasJWT() {
@@ -12,16 +13,18 @@ export const RouteGuard = ({ children, Component }) => {
     return flag;
   }
 
-  return (
-    <Route
-      {...children}
-      render={(children) =>
-        hasJWT() ? (
-          <Component {...children} />
-        ) : (
-          <Navigate to={{ pathname: "/login" }} />
-        )
-      }
-    />
-  );
+  return hasJWT() ? <Dashboard {...children} /> : <Navigate to="/login" />;
+
+  //   return (
+  //     // <Route
+  //     //   {...children}
+  //     //   render={(children) =>
+  //     //     hasJWT() ? (
+  //     //       <Dashboard {...children} />
+  //     //     ) : (
+  //     //       <Navigate to={{ pathname: "/login" }} />
+  //     //     )
+  //     //   }
+  //     // />
+  //   );
 };
