@@ -1,8 +1,8 @@
 import React from "react";
-import { Route, Navigate } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Dashboard } from "./Dashboard";
 
-export const RouteGuard = ({ children, Component }) => {
+export const RouteGuard = ({ children }) => {
   function hasJWT() {
     //can later check authentication of token in here
     let flag = false;
@@ -14,17 +14,4 @@ export const RouteGuard = ({ children, Component }) => {
   }
 
   return hasJWT() ? <Dashboard {...children} /> : <Navigate to="/login" />;
-
-  //   return (
-  //     // <Route
-  //     //   {...children}
-  //     //   render={(children) =>
-  //     //     hasJWT() ? (
-  //     //       <Dashboard {...children} />
-  //     //     ) : (
-  //     //       <Navigate to={{ pathname: "/login" }} />
-  //     //     )
-  //     //   }
-  //     // />
-  //   );
 };

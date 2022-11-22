@@ -3,6 +3,7 @@ const app = express();
 const port = 4000;
 const router = express.Router();
 const csv = require("csv-parser");
+const cors = require("cors");
 
 const fs = require("fs");
 var genres = [];
@@ -271,8 +272,8 @@ const mysql = require("mysql");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "Livi29946",
-  database: "lab3",
+  password: "12345",
+  database: "lab4",
 });
 
 db.connect((err) => {
@@ -360,6 +361,23 @@ app.get("/playlists/info/:pname", (req, res) => {
 //Delete playlist
 app.delete("/playlists/delete/:pname", (req, res) => {
   let sql = `DROP TABLE ${req.params.pname}`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+//_AUTHENTICATION ________________________________________________________________________________________________________________________
+app.use(express.json());
+app.use(cors());
+
+app.post("/register", (req, res) => {
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+  const email = req.body.email;
+  const password = req.body.password;
+  let sql = `INSERT INTO Users VALUES ("${first_name}", "${last_name}", "${email}", "${password}")`;
+
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
