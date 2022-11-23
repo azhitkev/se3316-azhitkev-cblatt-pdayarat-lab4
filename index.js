@@ -365,11 +365,11 @@ app.post("/api/authenticated/createplaylist/:name/:owner", (req, res) => {
 app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
   let sql = `DROP TABLE ${req.params.pname}`;
   let sql2 = `DELETE FROM playlist_data WHERE playlist_name = '${req.params.pname}'`
-  db.query(sql, (err, result) => {
+  db.query(sql2, (err, result) => {
     if (err) throw err;
     res.send("Playlist  Deleated...");
   });
-  db.query(sql2, (err, result) => {
+  db.query(sql, (err, result) => {
   });
 });
 
@@ -392,18 +392,28 @@ app.get("/api/playlists/list-names", (req, res) => {
   });
 });
 
-
 //Make playlist public
-app.get("/api/authenticated/playlist/", (req, res) => {
-  let sql = `SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_SCHEMA='lab4'`;
+app.get("/api/authenticated/playlist/status/public/:pname", (req, res) => {
+  let sql = `UPDATE playlist_data SET status = FALSE WHERE playlist_name = '${req.params.pname}'`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
   });
 });
-//Insert songs
-app.post("/addtrack/:pName/:tID", (req, res) => {
+
+//Make playlist private
+app.get("/api/authenticated/playlist/status/private/:pname", (req, res) => {
+  let sql = `UPDATE playlist_data SET status = TRUE WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
+//Insert song into playlist
+app.post("/api/authenticated/playlist/addtrack/:pName/:tID", (req, res) => {
   let playlistName = req.params.pName;
   let trackId = req.params.tID;
   let trackInt = parseInt(trackId);
@@ -427,10 +437,26 @@ app.post("/addtrack/:pName/:tID", (req, res) => {
     console.log(result);
     res.send(result);
   });
+
+  //Updating last edited
+  let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  date = date.toString();
+  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`
+  db.query(sql2, (err, result) => {
+  });
 });
 
-//Get songs in playlist
-app.get("/playlists/tracks/:pname", (req, res) => {
+//Delete a track in a playlist
+app.delete("/api/authenticated/playlists/deletetrack/:pname/:tID", (req, res) => {
+  let sql = `DELETE FROM ${req.params.pname} WHERE TrackID = '${req.params.tID}'`
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send("Track  Deleated...");
+  })
+});
+
+//Get all songs in playlist and their info
+app.get("/api/playlists/tracks/:pname", (req, res) => {
   let sql = `SELECT * FROM ${req.params.pname}`;
   db.query(sql, (err, result) => {
     if (err) throw err;
@@ -438,8 +464,9 @@ app.get("/playlists/tracks/:pname", (req, res) => {
     res.send(result);
   });
 });
+
 //Counters for playlists
-app.get("/playlists/info/:pname", (req, res) => {
+app.get("/api/playlists/info/:pname", (req, res) => {
   let sql = `SELECT (SELECT COUNT(*)
      FROM ${req.params.pname}) as tracks, (SELECT sum(PlayTime) FROM ${req.params.pname}) as duration`;
   db.query(sql, (err, result) => {
