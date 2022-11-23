@@ -351,7 +351,7 @@ app.post("/api/authenticated/createplaylist/:name/:owner", (req, res) => {
   let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   date = date.toString();
   let sql = `CREATE TABLE IF NOT EXISTS ${req.params.name}(TrackID int, Track VARCHAR(255), Artist VARCHAR(255), Album VARCHAR(255), PlayTime VARCHAR(255));`
-  let sql2 = `INSERT INTO playlist_data VALUES ("${req.params.name}", TRUE, "${req.params.owner}","${date}")`;
+  let sql2 = `INSERT INTO playlist_data (playlist_name, status, owner, last_edited) VALUES ("${req.params.name}", TRUE, "${req.params.owner}","${date}")`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
