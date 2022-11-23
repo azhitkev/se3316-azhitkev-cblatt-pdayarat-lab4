@@ -412,6 +412,18 @@ app.get("/api/authenticated/playlist/status/private/:pname", (req, res) => {
   });
 });
 
+//Insert description of playlist
+app.post("/api/authenticated/playlist/description/:pname/:desc", (req, res) => {
+  let sql = `UPDATE playlist_data SET description = ${req.params.desc} WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
+
+
 //Insert song into playlist
 app.post("/api/authenticated/playlist/addtrack/:pName/:tID", (req, res) => {
   let playlistName = req.params.pName;
