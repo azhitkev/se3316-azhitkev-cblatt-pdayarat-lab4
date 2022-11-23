@@ -3,7 +3,7 @@ const app = express();
 const port = 4000;
 const router = express.Router();
 const csv = require("csv-parser");
-const Fuse = require('fuse.js');
+const cors = require("cors");
 
 const fs = require("fs");
 var genres = [];
@@ -484,6 +484,32 @@ app.get("/api/playlists/info/:pname", (req, res) => {
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
+    res.send(result);
+  });
+});
+
+//Delete playlist
+app.delete("/playlists/delete/:pname", (req, res) => {
+  let sql = `DROP TABLE ${req.params.pname}`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+//_AUTHENTICATION ________________________________________________________________________________________________________________________
+app.use(express.json());
+app.use(cors());
+
+app.post("/register", (req, res) => {
+  const first_name = req.body.first_name;
+  const last_name = req.body.last_name;
+  const email = req.body.email;
+  const password = req.body.password;
+  let sql = `INSERT INTO Users VALUES ("${first_name}", "${last_name}", "${email}", "${password}")`;
+
+  db.query(sql, (err, result) => {
+    if (err) throw err;
     res.send(result);
   });
 });
