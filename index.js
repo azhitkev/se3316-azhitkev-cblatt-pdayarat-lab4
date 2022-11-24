@@ -383,3 +383,21 @@ app.post("/register", (req, res) => {
     res.send(result);
   });
 });
+
+app.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  let sql = `SELECT * FROM Users WHERE email = "${email}" AND password="${password}"`;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      res.send({ err: err });
+    }
+    if (result) {
+      res.send(result);
+    } else {
+      res.send({ message: "Wrong username/password combination!" });
+    }
+  });
+});

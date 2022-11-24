@@ -22,8 +22,12 @@
 import React from "react";
 import axios from "axios";
 import { setAuthToken } from "../helpers/setAuthToken";
+import { useState } from "react";
 
 export function LoginPage() {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const handleSubmit = (email, password) => {
     //reqres registered sample user
     const loginPayload = {
@@ -32,21 +36,13 @@ export function LoginPage() {
     };
 
     axios
-      .post("https://reqres.in/api/login", loginPayload)
-      .then((response) => {
-        //get token from response
-        const token = response.data.token;
-
-        //set JWT token to local
-        localStorage.setItem("token", token);
-
-        //set token to axios common header
-        setAuthToken(token);
-
-        //redirect user to home page
-        window.location.href = "/dashboard";
+      .post("http://localhost:4000/login", {
+        email: email,
+        password: password,
       })
-      .catch((err) => console.log(err));
+      .then((response) => {
+        console.log(response);
+      });
   };
 
   return (
@@ -59,13 +55,23 @@ export function LoginPage() {
     >
       <label for="email">Email</label>
       <br />
-      <input type="email" id="email" name="email" />
+      <input
+        type="email"
+        id="email"
+        name="email"
+        onChange={(e) => setUsername(e.target.value)}
+      />
       <br />
       <label for="password">Password</label>
       <br />
-      <input type="password" id="password" name="password" />
+      <input
+        type="password"
+        id="password"
+        name="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
       <br></br>
-      <input type="submit" value="Submit" />
+      <button onClick={handleSubmit}>Login</button>
     </form>
   );
 }
