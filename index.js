@@ -350,6 +350,7 @@ app.get("/createdb", (req, res) => {
 app.post("/api/authenticated/createplaylist/:name/:owner", (req, res) => {
   let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   date = date.toString();
+
   let sql1 = `CREATE TABLE IF NOT EXISTS ${req.params.name}(TrackID int, Track VARCHAR(255), Artist VARCHAR(255), Album VARCHAR(255), PlayTime VARCHAR(255));`
   let sql2 = `INSERT INTO playlist_data (playlist_name, status, owner, last_edited) VALUES ("${req.params.name}", TRUE, "${req.params.owner}","${date}")`;
   db.query(sql1, (err, result) => {
@@ -360,6 +361,8 @@ app.post("/api/authenticated/createplaylist/:name/:owner", (req, res) => {
   db.query(sql2, (err, result) => {
   });
 });
+// NOTE - PLAYLIST NAME CANNOT HAVE SPACE
+// NOTE - CANNOT CREATE 2 PLAYLISTS WITH THE SAME NAME. RESPONSE WILL SAY PLAYLIST CREATED BUT NOTHING WILL HAPPEN
 
 //Delete playlist 
 app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
