@@ -4,6 +4,9 @@ const port = 4000;
 const router = express.Router();
 const csv = require("csv-parser");
 const cors = require("cors");
+const bcrypt = require("bcrypt");
+
+const saltRounds = 10;
 
 const fs = require("fs");
 var genres = [];
@@ -376,11 +379,16 @@ app.post("/register", (req, res) => {
   const last_name = req.body.last_name;
   const email = req.body.email;
   const password = req.body.password;
-  let sql = `INSERT INTO Users VALUES ("${first_name}", "${last_name}", "${email}", "${password}")`;
 
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.send(result);
+  //we need to encrypt the password created by the user using the hash function so that it is not saved to the db as plain text (not safe)
+  bcrypt.hash(password, saltRounds, (err, hash) => {
+    if (err) console.log(err);
+    let sql = `INSERT INTO Users VALUES ("${first_name}", "${last_name}", "${email}", "${hash}")`;
+
+    db.query(sql, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
   });
 });
 
@@ -388,7 +396,7 @@ app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  let sql = `SELECT * FROM Users WHERE email = "${email}" AND password="${password}"`;
+  let sql = `SELECT * FROM Users WHERE email = "${email}"`;
 
   db.query(sql, (err, result) => {
     if (err) {
@@ -396,9 +404,16 @@ app.post("/login", (req, res) => {
     }
     //there is someone in the db with that username/password combination
     if (result.length > 0) {
-      res.send(result);
+      bcrypt.compare(password, result[0].password, (error, response) => {
+        if (response){
+          res.send(result)
+        } else {
+          res.send({ message: "Wrong username/password combination!" });
+        }
+      })
+      // res.send(result);
     } else {
-      res.send({ message: "Wrong username/password combination!" });
+      res.send({ message: "User does not exist" });
     }
   });
 });
