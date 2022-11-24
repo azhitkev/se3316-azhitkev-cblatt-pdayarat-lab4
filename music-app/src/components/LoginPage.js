@@ -23,10 +23,13 @@ import React from "react";
 import axios from "axios";
 import { setAuthToken } from "../helpers/setAuthToken";
 import { useState } from "react";
+import { data } from "jquery";
 
 export function LoginPage() {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const [loginStatus, setLoginStatus] = useState("");
 
   const handleSubmit = () => {
     axios
@@ -35,7 +38,12 @@ export function LoginPage() {
         password: password,
       })
       .then((response) => {
-        console.log(response);
+        if (response.data.message) {
+          setLoginStatus(response.data.message);
+        } else {
+          console.log(response);
+          setLoginStatus(response.data[0].email);
+        }
       });
   };
 
@@ -66,6 +74,7 @@ export function LoginPage() {
       />
       <br></br>
       <button onClick={handleSubmit}>Login</button>
+      <h1>{loginStatus}</h1>
     </form>
   );
 }

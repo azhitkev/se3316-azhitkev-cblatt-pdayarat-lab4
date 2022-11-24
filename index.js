@@ -394,7 +394,8 @@ app.post("/login", (req, res) => {
     if (err) {
       res.send({ err: err });
     }
-    if (result) {
+    //there is someone in the db with that username/password combination
+    if (result.length > 0) {
       res.send(result);
     } else {
       res.send({ message: "Wrong username/password combination!" });
