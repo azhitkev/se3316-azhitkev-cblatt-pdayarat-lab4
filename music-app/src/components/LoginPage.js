@@ -25,16 +25,10 @@ import { setAuthToken } from "../helpers/setAuthToken";
 import { useState } from "react";
 
 export function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (email, password) => {
-    //reqres registered sample user
-    const loginPayload = {
-      email: "eve.holt@reqres.in",
-      password: "cityslicka",
-    };
-
+  const handleSubmit = () => {
     axios
       .post("http://localhost:4000/login", {
         email: email,
