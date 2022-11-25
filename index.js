@@ -4,6 +4,7 @@ const port = 4000;
 const router = express.Router();
 const csv = require("csv-parser");
 const cors = require("cors");
+app.use(cors());
 
 const fs = require("fs");
 var genres = [];
