@@ -7,7 +7,7 @@ import { history } from "./helpers/history";
 import { setAuthToken } from "./helpers/setAuthToken";
 import { RegistrationForm } from "./components/RegistrationForm";
 
-import {PlaylistView} from "./components/PlaylistView";
+import PlaylistView from "./components/PlaylistView";
 
 function App() {
   //check jwt token
