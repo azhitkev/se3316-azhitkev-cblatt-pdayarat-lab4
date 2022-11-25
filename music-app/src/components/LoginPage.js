@@ -1,35 +1,12 @@
-// import "../LoginPage.css";
-
-// export const LoginPage = () => {
-//   return (
-//     <form className="login-wrapper">
-//       <h1>Please Log In</h1>
-//       <label>
-//         <p>Username</p>
-//         <input type="text" />
-//       </label>
-//       <label>
-//         <p>Password</p>
-//         <input type="password" />
-//       </label>
-//       <div>
-//         <button type="submit">Submit</button>
-//       </div>
-//     </form>
-//   );
-// };
-
 import React from "react";
 import axios from "axios";
-import { setAuthToken } from "../helpers/setAuthToken";
 import { useState, useEffect } from "react";
-import { data } from "jquery";
 
 export function LoginPage() {
   const [email, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [loginStatus, setLoginStatus] = useState("");
+  const [loginStatus, setLoginStatus] = useState(false);
 
   //needed to connect FE to BE with sessions (doesn't work without this)
   axios.defaults.withCredentials = true;
@@ -41,12 +18,27 @@ export function LoginPage() {
         password: password,
       })
       .then((response) => {
-        if (response.data.message) {
-          setLoginStatus(response.data.message);
+        if (!response.data.auth) {
+          setLoginStatus(false);
         } else {
-          console.log(response);
-          setLoginStatus(response.data[0].email);
+          //this is how we are getting our token and saving it to local storage
+          localStorage.setItem("token", response.data.token);
+          setLoginStatus(true);
         }
+      });
+  };
+
+  //this is what checks if the user has a valid JWT
+  const userAuthenticated = () => {
+    axios
+      .get("http://localhost:4000/api/authenticated", {
+        headers: {
+          "x-access-token": localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        //currently the response is "yo you are authenticated"
+        console.log(response);
       });
   };
 
@@ -87,7 +79,9 @@ export function LoginPage() {
       />
       <br></br>
       <button onClick={handleSubmit}>Login</button>
-      <h1>{loginStatus}</h1>
+      {loginStatus && (
+        <button onClick={userAuthenticated}> Check if authenticated</button>
+      )}
     </form>
   );
 }

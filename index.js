@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const jwt = require("jsonwebtoken");
 
 const saltRounds = 10;
 
@@ -410,13 +411,38 @@ app.post("/register", (req, res) => {
   //we need to encrypt the password created by the user using the hash function so that it is not saved to the db as plain text (not safe)
   bcrypt.hash(password, saltRounds, (err, hash) => {
     if (err) console.log(err);
-    let sql = `INSERT INTO Users VALUES ("${first_name}", "${last_name}", "${email}", "${hash}")`;
+    let sql = `INSERT INTO Users (first_name, last_name, email, password) VALUES ("${first_name}", "${last_name}", "${email}", "${hash}")`;
 
     db.query(sql, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
   });
+});
+
+//verifies that there the json token that is presented corresponds to the valid user's json token
+const verifyJWT = (req, res, next) => {
+  const token = req.headers["x-access-token"];
+
+  //if there is no token
+  if (!token) {
+    res.send("yo, we need a token, please give it to us next time!");
+  } else {
+    jwt.verify(token, "jwtSecret", (err, decoded) => {
+      if (err) {
+        res.json({ auth: false, message: "You failed to authenticate" });
+      } else {
+        //this is the decoded token (id) being set to the userid variable
+        req.userId = decoded.id;
+        next();
+      }
+    });
+  }
+};
+
+//checks if the user is authenticated
+app.get("/api/authenticated", verifyJWT, (req, res) => {
+  res.send("Yo, u are authenticated. Congrats!");
 });
 
 app.get("/login", (req, res) => {
@@ -441,16 +467,27 @@ app.post("/login", (req, res) => {
     if (result.length > 0) {
       bcrypt.compare(password, result[0].password, (error, response) => {
         if (response) {
+          const id = result[0].id;
+          //creating the json web token
+          const token = jwt.sign({ id }, "jwtSecret", {
+            expiresIn: 300, //5 minutes
+          });
+
           //creating a session with the user we get from our database and setting it to the result we just got
           req.session.user = result;
-          res.send(result);
+
+          //since we have gotten to this point, the authorization is true and we need to send the json token and result
+          res.json({ auth: true, token: token, result: result });
         } else {
-          res.send({ message: "Wrong username/password combination!" });
+          res.json({
+            auth: false,
+            message: "Wrong username/password combination",
+          });
         }
       });
-      // res.send(result);
     } else {
-      res.send({ message: "User does not exist" });
+      //happens if no user exists
+      res.json({ auth: false, message: "No user exists" });
     }
   });
 });
