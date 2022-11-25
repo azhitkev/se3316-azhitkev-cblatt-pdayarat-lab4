@@ -22,7 +22,7 @@
 import React from "react";
 import axios from "axios";
 import { setAuthToken } from "../helpers/setAuthToken";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { data } from "jquery";
 
 export function LoginPage() {
@@ -30,6 +30,9 @@ export function LoginPage() {
   const [password, setPassword] = useState("");
 
   const [loginStatus, setLoginStatus] = useState("");
+
+  //needed to connect FE to BE with sessions (doesn't work without this)
+  axios.defaults.withCredentials = true;
 
   const handleSubmit = () => {
     axios
@@ -46,6 +49,16 @@ export function LoginPage() {
         }
       });
   };
+
+  useEffect(() => {
+    //we have two routes which is fine because this is a get request getting info on if the user is logged in or not
+    axios.get("http://localhost:4000/login").then((response) => {
+      //only if the status of logged in is true do we want to show the username
+      if (response.data.loggedIn === true) {
+        setLoginStatus(response.data.user[0].email);
+      }
+    });
+  }, []);
 
   return (
     <form

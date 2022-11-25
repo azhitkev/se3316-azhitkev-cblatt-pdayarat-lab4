@@ -5,6 +5,9 @@ const router = express.Router();
 const csv = require("csv-parser");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 const saltRounds = 10;
 
@@ -272,6 +275,7 @@ app.use((req, res, next) => {
 //_DATA BASE ________________________________________________________________________________________________________________________
 //Connecting to database
 const mysql = require("mysql");
+const e = require("express");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -372,7 +376,30 @@ app.delete("/playlists/delete/:pname", (req, res) => {
 
 //_AUTHENTICATION ________________________________________________________________________________________________________________________
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+    credentials: true,
+  })
+);
+
+//how you instantiate the cookie parser and body parser so that these extensions work
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(
+  session({
+    key: "userId",
+    secret: "3316aztdcb",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      //means that the cookie expires after 24 hours, so sessions can be maintained for that long
+      expires: 60 * 60 * 24,
+    },
+  })
+);
 
 app.post("/register", (req, res) => {
   const first_name = req.body.first_name;
@@ -392,6 +419,14 @@ app.post("/register", (req, res) => {
   });
 });
 
+app.get("/login", (req, res) => {
+  if (req.session.user) {
+    res.send({ loggedIn: true, user: req.session.user });
+  } else {
+    res.send({ loggedIn: false });
+  }
+});
+
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
@@ -405,12 +440,14 @@ app.post("/login", (req, res) => {
     //there is someone in the db with that username/password combination
     if (result.length > 0) {
       bcrypt.compare(password, result[0].password, (error, response) => {
-        if (response){
-          res.send(result)
+        if (response) {
+          //creating a session with the user we get from our database and setting it to the result we just got
+          req.session.user = result;
+          res.send(result);
         } else {
           res.send({ message: "Wrong username/password combination!" });
         }
-      })
+      });
       // res.send(result);
     } else {
       res.send({ message: "User does not exist" });
