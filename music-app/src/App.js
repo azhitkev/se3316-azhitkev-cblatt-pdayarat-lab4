@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { LoginPage } from "./components/LoginPage";
 import { Dashboard } from "./components/Dashboard";
 import { RouteGuard } from "./components/RouteGuard";
+import { UnauthSearch } from "./components/UnauthSearch";
 
 import { history } from "./helpers/history";
 import { setAuthToken } from "./helpers/setAuthToken";
@@ -19,6 +20,7 @@ function App() {
       <Routes history={history}>
         <Route path="/" element={<RegistrationForm />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="/unauthSearch" element={<UnauthSearch />}></Route>
         <Route
           path="/dashboard"
           element={
