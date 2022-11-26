@@ -1,94 +1,63 @@
-
-import axios from "axios";
+//Needed Inports:
 import React, { useEffect, useState } from "react";
 
-//getPlaylists();
+//Varibale to hold name of displaying playlist
+var name = "Rap";
+//Main component of page
+const PlaylistView = () => {
+  const [products, setProducts] = useState([]);
 
-    // function getPlaylists() {
-    //     axios
-    //     .get(`http://localhost:4000/api/authenticated/playlists/list-names`).then((res) =>
-    //       res.json().then((data) => {
-    //         console.log(data);
-    //        // const l = document.getElementById("list-Playlists");
-    //         //Making sure list is not repeated
-    //         // while (l.firstChild) {
-    //         //   l.removeChild(l.firstChild);
-    //         // }
-    //         // const item1 = document.createElement("option");
-    //         // item1.appendChild(document.createTextNode("Select.."));
-    //         // l.appendChild(item1);
-      
-    //         // data.forEach((e) => {
-    //         //  // l.addEventListener("click", showList);
-      
-    //         //   const item = document.createElement("option");
-    //         //   item.appendChild(document.createTextNode(`${e.TABLE_NAME}`));
-    //         //   l.appendChild(item);
-    //         // });
-    //       })
-    //     );
-    //   }
+  useEffect(() => {
+    getPlaylists();
+  }, []);
 
-
-    const PlaylistView =()=>{
-        const [products, setProducts]=useState([]);
-
-        useEffect(()=>{
-            getPlaylists();
-        }, []);
-
-
-        const getPlaylists = async () =>{
-            let result = await fetch('http://localhost:4000/api/authenticated/playlists/list-names');
-            result = await result.json();
-            settingProducts(result);
-        }
-
-    
-        console.warn(products);
-
-
-        function settingProducts(data){
-            const l = document.getElementById("list-Playlists");
-      
-            data.forEach((e) => {
-             // l.addEventListener("click", showList);
-      
-              const item = document.createElement("option");
-              item.appendChild(document.createTextNode(`${e.playlist_name}`));
-              l.appendChild(item);
-            });
-        }
-        
-
-    return(  
-    <React.Fragment>
-    <h1>Playlist Page</h1>
-    <form>
-                <label id="pHeading">Current Playlists: </label>
-                <select id="list-Playlists">
-                    <option>Select...</option>
-                </select>
-    </form>
-
-        <div className="track-list">
-        <ul> 
-        <li>T .No</li>
-        <li>Track</li>
-        <li>Artist</li>
-        <li>Album</li>
-        <li>Play Time</li>
-        
-        </ul>
-
-
-        </div>
-        
-    
-
-
-  </React.Fragment>
+  //Calls back end node.js and sql
+  const getPlaylists = async () => {
+    let result = await fetch(
+      `http://localhost:4000/api/playlists/tracks/${name.toLowerCase()}`
     );
+    result = await result.json();
+    setProducts(result);
   };
-  export default PlaylistView;
-  
+  console.warn(products);
+
+  //Html for page
+  return (
+    <React.Fragment>
+      <div className="playlist-info">
+        <h1>{name}</h1>
+      </div>
+
+      <div className="track-list">
+        <table id="t1">
+          <tr>
+            <th>T .No</th>
+            <th>Track</th>
+            <th>Artist</th>
+            <th>Album</th>
+            <th>Play Time</th>
+            <th>
+              <button>Delete playlist</button>
+            </th>
+          </tr>
+
+          {products.map((item) => (
+            <tr>
+              <td>{item.TrackID}</td>
+              <td>{item.Track}</td>
+              <td>{item.Artist}</td>
+              <td>{item.Album}</td>
+              <td>{item.PlayTime}</td>
+              <td>
+                <button class="btn btn-delete">
+                  <span>Remove</span>
+                </button>
+              </td>
+            </tr>
+          ))}
+        </table>
+      </div>
+    </React.Fragment>
+  );
+};
+export default PlaylistView;
