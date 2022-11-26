@@ -8,6 +8,8 @@ import { history } from "./helpers/history";
 import { setAuthToken } from "./helpers/setAuthToken";
 import { RegistrationForm } from "./components/RegistrationForm";
 
+import PlaylistView from "./components/PlaylistView";
+
 function App() {
   //check jwt token
   const token = localStorage.getItem("token");
@@ -20,6 +22,7 @@ function App() {
       <Routes history={history}>
         <Route path="/" element={<RegistrationForm />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
+        <Route path="api/playlistview" element={<PlaylistView />}></Route>
         <Route path="/unauthSearch" element={<UnauthSearch />}></Route>
         <Route
           path="/dashboard"
