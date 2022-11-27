@@ -7,7 +7,7 @@ import { history } from "./helpers/history";
 import { setAuthToken } from "./helpers/setAuthToken";
 import { RegistrationForm } from "./components/RegistrationForm";
 
-import PlaylistView from "./components/PlaylistView";
+import AuthPlaylistView from "./components/AuthPlaylistView";
 
 function App() {
   //check jwt token
@@ -21,7 +21,7 @@ function App() {
       <Routes history={history}>
         <Route path="/" element={<RegistrationForm />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
-        <Route path="api/playlistview" element={<PlaylistView />}></Route>
+        <Route path="api/authenticated/playlistview" element={<AuthPlaylistView />}></Route>
         <Route
           path="/dashboard"
           element={

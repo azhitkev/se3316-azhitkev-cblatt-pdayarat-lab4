@@ -19,7 +19,21 @@ const PlaylistView = () => {
     result = await result.json();
     setProducts(result);
   };
-  console.warn(products);
+
+  //Method to delete tracks in playlist
+  const deleteTrack = async (id)=>{
+    console.warn(id);
+    let result = await fetch(`http://localhost:4000/api/authenticated/playlists/deletetrack/${name.toLowerCase()}/${parseInt(id)}`,{
+      method:"Delete"
+    });
+    result = await result.json();
+    if(result){
+      getPlaylists();
+    }
+
+    
+
+  }
 
   //Html for page
   return (
@@ -30,6 +44,7 @@ const PlaylistView = () => {
 
       <div className="track-list">
         <table id="t1">
+          <tbody>
           <tr>
             <th>T .No</th>
             <th>Track</th>
@@ -49,12 +64,11 @@ const PlaylistView = () => {
               <td>{item.Album}</td>
               <td>{item.PlayTime}</td>
               <td>
-                <button class="btn btn-delete">
-                  <span>Remove</span>
-                </button>
+                <button onClick={()=> deleteTrack(item.TrackID)} className="btn btn-delete">Remove</button>
               </td>
             </tr>
           ))}
+          </tbody>
         </table>
       </div>
     </React.Fragment>
