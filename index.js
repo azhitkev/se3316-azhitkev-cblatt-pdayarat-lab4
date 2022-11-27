@@ -90,6 +90,7 @@ function tracksProperties(show) {
     track_genres,
     track_number,
     track_title,
+    track_url
   } = show;
   return {
     track_id,
@@ -104,6 +105,7 @@ function tracksProperties(show) {
     track_genres,
     track_number,
     track_title,
+    track_url
   };
 }
 //Filtering Albums
@@ -162,6 +164,8 @@ app.get('/api/tracks/:unauthSearch', (req, res) => {
 
   var results = fuse.search(input);
 
+  var resultsStr = '';
+
   // looping through the fuzzy search results array
   for(var i=0; i<results.length; i++){
     // only storing the search results with a score <= 0.4
@@ -176,12 +180,22 @@ app.get('/api/tracks/:unauthSearch', (req, res) => {
 
   // if if one or more matching tracks are found, send the trackResults array
   if(trackResults.length > 0){
+    for(var i=0; i<trackResults.length; i++){
+      resultsStr += trackResults[i].item.track_title + '\xa0\xa0\xa0\xa0' + 'By: ' + trackResults[i].item.artist_name + ';';
+    }
     res.send(trackResults);
   }
   // if no matches are found, send the status and an error message
   else{
     res.status(404).send(`Track ${input} was not found!`);
   }
+});
+
+// search for track by track ID
+app.get('/api/tracks/getInfo/:trackID', (req, res) => {
+  const input = req.params.trackID;
+  const track = tracks.find(tr => tr.track_id == input);
+  res.send(track);
 })
 
 
@@ -327,6 +341,7 @@ app.use((req, res, next) => {
 //_DATA BASE ________________________________________________________________________________________________________________________
 //Connecting to database
 const mysql = require("mysql");
+const { UNSAFE_convertRoutesToDataRoutes } = require("@remix-run/router");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
