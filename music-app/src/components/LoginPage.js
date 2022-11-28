@@ -2,11 +2,13 @@ import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export function LoginPage() {
   const [user, setUser] = useState({});
   const [emailLogin, setEmailLogin] = useState(null);
   const [passwordLogin, setPasswordLogin] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -81,7 +83,7 @@ export function LoginPage() {
           <h2>Please verify your account in order to log in.</h2>
         )}
         {/* this renders if the user did verify their email, MAKE IT SHOW THE DASHBOARD COMPONENT?*/}
-        {user?.emailVerified && <h1>Congrats, you are logged in!</h1>}
+        {user?.emailVerified && navigate("/dashboard")}
         <button type="submit" onClick={login} class="btn">
           Login
         </button>
