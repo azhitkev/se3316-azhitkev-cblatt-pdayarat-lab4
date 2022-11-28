@@ -27,19 +27,15 @@ export function LoginPage() {
   };
 
   const login = async () => {
-    if (auth.currentUser.emailVerified) {
-      try {
-        const user = await signInWithEmailAndPassword(
-          auth,
-          emailLogin,
-          passwordLogin
-        );
-        console.log(user);
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
-      console.log("user is not verified");
+    try {
+      const user = await signInWithEmailAndPassword(
+        auth,
+        emailLogin,
+        passwordLogin
+      );
+      console.log(user);
+    } catch (error) {
+      console.log(error.message);
     }
   };
 
@@ -80,7 +76,12 @@ export function LoginPage() {
         </div>
       </div>
       <div class="footer">
-        <h1>{user?.email}</h1>
+        {/* this renders if the user did not verify their email */}
+        {user?.email && !user?.emailVerified && (
+          <h2>Please verify your account in order to log in.</h2>
+        )}
+        {/* this renders if the user did verify their email, MAKE IT SHOW THE DASHBOARD COMPONENT?*/}
+        {user?.emailVerified && <h1>Congrats, you are logged in!</h1>}
         <button type="submit" onClick={login} class="btn">
           Login
         </button>
