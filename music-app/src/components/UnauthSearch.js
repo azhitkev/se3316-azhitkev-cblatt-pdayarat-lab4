@@ -69,6 +69,9 @@ export const UnauthSearch = () => {
 
             infoList.appendChild(document.createTextNode('Album: ' + data.album_title));
             infoList.appendChild(document.createElement('br'));
+
+            infoList.appendChild(document.createTextNode('******NEED TO ADD GENRE'));
+            infoList.appendChild(document.createElement('br'));
             
             /*
             NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
@@ -145,7 +148,7 @@ export const UnauthSearch = () => {
             
             <div id="additionalInfo" style={{textAlign: 'center'}}>
                 <center>
-                <ol id="infoList" style={{paddingLeft: '0', textAlign: 'left', display: 'inline-block'}}>
+                <ol id="infoList" style={{paddingLeft: '0', display: 'inline-block'}}>
                     
                 </ol>
                 </center>
