@@ -7,7 +7,6 @@ const cors = require("cors");
 app.use(cors());
 const Fuse = require("fuse.js")
 
-
 const fs = require("fs");
 var genres = [];
 var albums = [];
@@ -176,17 +175,12 @@ app.get("/api/albums", (req, res) => {
 
 // unauthenticated user search --------------------------
 // search for tracks based on any combination of track title, artist, band, or genre
-app.get('/api/tracks/:unauthSearch', (req, res) => {
+app.get("/api/tracks/:unauthSearch", (req, res) => {
   const input = req.params.unauthSearch; // storing the search input
   var trackResults = []; // storing the resulting tracks for the input
 
   const options = {
-    keys: [
-      'track_title',
-      'artist_name',
-      'album_title',
-      'track_genres'
-    ],
+    keys: ["track_title", "artist_name", "album_title", "track_genres"],
     includeScore: true, // include fuzziness score - 0 = perfect match, 1 = no match
     shouldSort: true, // sorts by fuzziness (least to most)
     isCaseSensitive: false,
@@ -200,29 +194,34 @@ app.get('/api/tracks/:unauthSearch', (req, res) => {
   var resultsStr = '';
 
   // looping through the fuzzy search results array
-  for(var i=0; i<results.length; i++){
+  for (var i = 0; i < results.length; i++) {
     // only storing the search results with a score <= 0.4
-    if(results[i].score <= 0.4){
+    if (results[i].score <= 0.4) {
       trackResults.push(results[i]);
     }
     // if there are many search results, only show the 30 best matches
-    if(trackResults.length >= 30){
+    if (trackResults.length >= 30) {
       break;
     }
   }
 
   // if if one or more matching tracks are found, send the trackResults array
+<<<<<<< Updated upstream
   if(trackResults.length > 0){
     for(var i=0; i<trackResults.length; i++){
       resultsStr += trackResults[i].item.track_title + '\xa0\xa0\xa0\xa0' + 'By: ' + trackResults[i].item.artist_name + ';';
     }
+=======
+  if (trackResults.length > 0) {
+>>>>>>> Stashed changes
     res.send(trackResults);
   }
   // if no matches are found, send the status and an error message
-  else{
+  else {
     res.status(404).send(`Track ${input} was not found!`);
   }
 });
+<<<<<<< Updated upstream
 
 // search for track by track ID
 app.get('/api/tracks/getInfo/:trackID', (req, res) => {
@@ -240,6 +239,11 @@ app.get('/api/tracks/getInfo/:trackID', (req, res) => {
 
 
 
+=======
+
+// ------------------------------------------------------
+
+>>>>>>> Stashed changes
 //Get Atrist info from ID
 app.get("/api/artists/info/:artistID", (req, res) => {
   const id = req.params.artistID;
@@ -399,32 +403,30 @@ app.get("/createdb", (req, res) => {
 
 //Create Table/playlist and adds to list of playlists marked private.
 app.post("/api/authenticated/createplaylist/:name/:owner", (req, res) => {
-  let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  let date = new Date().toISOString().slice(0, 19).replace("T", " ");
   date = date.toString();
 
-  let sql1 = `CREATE TABLE IF NOT EXISTS ${req.params.name}(TrackID int, Track VARCHAR(255), Artist VARCHAR(255), Album VARCHAR(255), PlayTime VARCHAR(255));`
+  let sql1 = `CREATE TABLE IF NOT EXISTS ${req.params.name}(TrackID int, Track VARCHAR(255), Artist VARCHAR(255), Album VARCHAR(255), PlayTime VARCHAR(255));`;
   let sql2 = `INSERT INTO playlist_data (playlist_name, status, owner, last_edited) VALUES ("${req.params.name}", TRUE, "${req.params.owner}","${date}")`;
   db.query(sql1, (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send("Playlist  created...");
   });
-  db.query(sql2, (err, result) => {
-  });
+  db.query(sql2, (err, result) => {});
 });
 // NOTE - PLAYLIST NAME CANNOT HAVE SPACE
 // NOTE - CANNOT CREATE 2 PLAYLISTS WITH THE SAME NAME. RESPONSE WILL SAY PLAYLIST CREATED BUT NOTHING WILL HAPPEN
 
-//Delete playlist 
+//Delete playlist
 app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
   let sql = `DROP TABLE ${req.params.pname}`;
-  let sql2 = `DELETE FROM playlist_data WHERE playlist_name = '${req.params.pname}'`
+  let sql2 = `DELETE FROM playlist_data WHERE playlist_name = '${req.params.pname}'`;
   db.query(sql2, (err, result) => {
     if (err) throw err;
     res.send("Playlist  Deleated...");
   });
-  db.query(sql, (err, result) => {
-  });
+  db.query(sql, (err, result) => {});
 });
 
 //Shows list of all playlists
@@ -503,21 +505,23 @@ app.post("/api/authenticated/playlist/addtrack/:pName/:tID", (req, res) => {
   });
 
   //Updating last edited
-  let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  let date = new Date().toISOString().slice(0, 19).replace("T", " ");
   date = date.toString();
-  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`
-  db.query(sql2, (err, result) => {
-  });
+  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql2, (err, result) => {});
 });
 
 //Delete a track in a playlist
-app.delete("/api/authenticated/playlists/deletetrack/:pname/:tID", (req, res) => {
-  let sql = `DELETE FROM ${req.params.pname} WHERE TrackID = '${req.params.tID}'`
-  db.query(sql, (err, result) => {
-    if (err) throw err;
-    res.send(result);
-  })
-});
+app.delete(
+  "/api/authenticated/playlists/deletetrack/:pname/:tID",
+  (req, res) => {
+    let sql = `DELETE FROM ${req.params.pname} WHERE TrackID = '${req.params.tID}'`;
+    db.query(sql, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
+  }
+);
 
 //Get all songs in playlist and their info
 app.get("/api/playlists/tracks/:pname", (req, res) => {
@@ -554,11 +558,11 @@ app.use(express.json());
 app.use(cors());
 
 app.post("/register", (req, res) => {
-  const first_name = req.body.first_name;
-  const last_name = req.body.last_name;
+  const username = req.body.username;
   const email = req.body.email;
   const password = req.body.password;
-  let sql = `INSERT INTO Users VALUES ("${first_name}", "${last_name}", "${email}", "${password}")`;
+
+  let sql = `INSERT INTO Users (username, email, role) VALUES ("${username}", "${email}", "active-user")`;
 
   db.query(sql, (err, result) => {
     if (err) throw err;
