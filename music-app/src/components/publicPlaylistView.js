@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 
 //Varibale to hold name of displaying playlist
 var name = "Rap";
-var user = "Tisal";
+
 
 //Main component of page
-const AuthPlaylistView = () => {
+const PublicPlaylistView = () => {
   const [playlists, setplaylists] = useState([]);
 
   const [info, setinfo] = useState([]);
@@ -34,22 +34,6 @@ const AuthPlaylistView = () => {
     setplaylists(result);
   };
 
-  //Method to delete tracks in playlist
-  const deleteTrack = async (id) => {
-    console.warn(id);
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlists/deletetrack/${name.toLowerCase()}/${parseInt(
-        id
-      )}`,
-      {
-        method: "Delete",
-      }
-    );
-    result = await result.json();
-    if (result) {
-      getPlaylists();
-    }
-  };
 
   ///Checks playlist information and also sets status
   const playlistInfo = async () => {
@@ -65,22 +49,6 @@ const AuthPlaylistView = () => {
     setinfo(result);
   };
 
-  //Change status of playlsit to either public or private
-  const changeStatusInfo = async (id) => {
-    if (id == "Public") {
-      let result1 = await fetch(
-        `http://localhost:4000/api/authenticated/playlist/status/private/${name.toLowerCase()}`
-      );
-      window.location.reload(false);
-    } else if (id == "Private") {
-      let result2 = await fetch(
-        `http://localhost:4000/api/authenticated/playlist/status/public/${name.toLowerCase()}`
-      );
-      window.location.reload(false);
-    } else {
-      console.log("no changes");
-    }
-  };
 
   //shows coments on playlist
   const getComments = async () => {
@@ -90,50 +58,7 @@ const AuthPlaylistView = () => {
     result = await result.json();
     setcmnts(result);
   };
-  //add coments to playlist;
-  const addComments = async () => {
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/comments/${name.toLowerCase()}/${user}/${updated}/${update}`,
-      {
-        method: "Post",
-      }
-    );
-    result = await result.json();
-  };
-  //Holds temporary comments when entering
-  const [message, setMessage] = useState("");
-  const [updated, setUpdated] = useState(message);
-  const handleChange = (event) => {
-    setMessage(event.target.value);
-  };
-  const handleClick = () => {
-    // "message" stores input field value
-    setUpdated(message);
-  };
 
-  //Setting rating by holding user value
-  const [rating, setRating] = useState("");
-  const [update, setUpdate] = useState(rating);
-  const handleChange2 = (event) => {
-    setRating(event.target.value);
-  };
-  const handleClick2 = () => {
-    // "message" stores input field value
-    setUpdate(rating);
-  };
-
-  //Changes Descripton to what user wants
-  const updateDescription = async (id) => {
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${id}}`,
-      {
-        method: "Post",
-      }
-    );
-    result = await result.json();
-  };
-
-  //Shows information for each individual track
   function trackInfo(trackId){
 
     fetch('/api/tracks/getInfo/' + trackId)
@@ -180,7 +105,6 @@ const AuthPlaylistView = () => {
 
     }))
 }
-//Clears track info div
      function clearInfoList(){
         while(document.getElementById('infoList').firstChild){
             document.getElementById('infoList').removeChild(document.getElementById('infoList').firstChild);
@@ -196,7 +120,6 @@ const AuthPlaylistView = () => {
         {info.map((item) => (
           <p>
             Description: {item.description}
-
             <br></br> Owner: {item.owner}
             <br></br>
             Status: {item.status}
@@ -246,35 +169,6 @@ const AuthPlaylistView = () => {
             ))}
           </tbody>
         </table>
-
-        <form onSubmit={addComments} id="cmnts">
-          <label for="fname">Enter Comments:</label>
-          <br></br>
-          <input
-            type="text"
-            id="message"
-            name="message"
-            onChange={handleChange}
-            value={message}
-          ></input>
-          <br></br>
-
-          <label for="fname">Enter Rating /10:</label>
-          <br></br>
-          <input
-            type="number"
-            id="rating"
-            name="rating"
-            onChange={handleChange2}
-            value={rating}
-            max={"10"}
-            min={"0"}
-          ></input>
-
-          <button onClick={function(event){ handleClick(); handleClick2()}} className="btn1 btn-edit">Update</button>
-        </form>
-
-        <h4>Comment: {message} <br></br>Rating: {rating}</h4>
         <h3>Comments:</h3>
         <table id="t2">
           <tbody>
@@ -294,4 +188,4 @@ const AuthPlaylistView = () => {
     </React.Fragment>
   );
 };
-export default AuthPlaylistView;
+export default PublicPlaylistView;
