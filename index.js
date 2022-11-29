@@ -478,6 +478,12 @@ app.delete("/api/authenticated/playlists/deletetrack/:pname/:tID", (req, res) =>
     if (err) throw err;
     res.send(result);
   })
+    //Updating last edited
+    let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    date = date.toString();
+    let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`
+    db.query(sql2, (err, result) => {
+    });
 });
 
 //Get all songs in playlist and their info
@@ -511,16 +517,27 @@ app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
 });
 
 //Enter comments for individual playlists
-app.post("/api/authenticated/playlist/comments/:pname/:user/:cmnt", (req, res) => {
+app.post("/api/authenticated/playlist/comments/:pname/:user/:cmnt/:rating", (req, res) => {
   let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   date = date.toString();
-  let sql = `INSERT INTO playlist_comments VALUES ("${req.params.pname}","${req.params.user}","${req.params.cmnt}","${date}",)`;
+  let sql = `INSERT INTO playlist_comments VALUES ("${req.params.pname}","${req.params.user}","${req.params.cmnt}","${date}",${req.params.rating})`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+
+});
+//Get comments for individual playlists
+app.get("/api/playlist/comments/:pname", (req, res) => {
+  let sql = `SELECT * FROM playlist_comments WHERE playlist_name = '${req.params.pname}'`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
     res.send(result);
   });
 });
+
 
 //_AUTHENTICATION ________________________________________________________________________________________________________________________
 app.use(express.json());
