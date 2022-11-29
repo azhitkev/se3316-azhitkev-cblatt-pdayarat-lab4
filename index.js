@@ -419,7 +419,17 @@ app.get("/api/authenticated/playlist/status/private/:pname", (req, res) => {
 
 //Insert description of playlist
 app.post("/api/authenticated/playlist/description/:pname/:desc", (req, res) => {
-  let sql = `UPDATE playlist_data SET description = ${req.params.desc} WHERE playlist_name = '${req.params.pname}'`;
+  let sql = `UPDATE playlist_data SET description = "${req.params.desc}" WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
+//Get description of playlist
+app.get("/api/authenticated/playlist/get-description/:pname", (req, res) => {
+  let sql = `SELECT * FROM playlist_data WHERE playlist_name = '${req.params.pname}'`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -496,6 +506,18 @@ app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
   let sql = `DROP TABLE ${req.params.pname}`;
   db.query(sql, (err, result) => {
     if (err) throw err;
+    res.send(result);
+  });
+});
+
+//Enter comments for individual playlists
+app.post("/api/authenticated/playlist/comments/:pname/:user/:cmnt", (req, res) => {
+  let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  date = date.toString();
+  let sql = `INSERT INTO playlist_comments VALUES ("${req.params.pname}","${req.params.user}","${req.params.cmnt}","${date}",)`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
     res.send(result);
   });
 });
