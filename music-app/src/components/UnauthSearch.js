@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 export const UnauthSearch = () => {
 
@@ -94,17 +95,29 @@ export const UnauthSearch = () => {
         }))
 
     }
+
+    
     
 
-    /*
-    function sayHello(){
-        var infoList = document.getElementById('infoList');
-        infoList.appendChild(document.createTextNode('hello'));
-    }
-    */
+    
 
     return(
         <div id="unauthSearch">
+            <div>
+                <div>
+                    <br />
+                    <Link to="/login" style={{marginLeft: '20px'}}>Login</Link>
+                    <Link to="/register" style={{marginLeft: '20px'}}>Register</Link>
+                    <Link to="/unauth-playlists" style={{marginLeft: '20px'}}>Playlists</Link>
+                    
+                </div>
+                <center>
+                    <span style={{fontSize: '60px', fontFamily: 'Impact'}} >MUSIC TOWN</span>
+                    <br />
+                    <span style={{fontSize: '25px', fontFamily: 'Copperplate'}}>A Web Application for Accessing Music Data</span>
+                </center>
+            </div>
+
             <div id="searchBar">
                 <br />
                 <center>

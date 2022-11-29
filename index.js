@@ -125,6 +125,7 @@ function tracksProperties(show) {
     track_genres,
     track_number,
     track_title,
+    track_url
   } = show;
   return {
     track_id,
@@ -139,6 +140,7 @@ function tracksProperties(show) {
     track_genres,
     track_number,
     track_title,
+    track_url
   };
 }
 //Filtering Albums
