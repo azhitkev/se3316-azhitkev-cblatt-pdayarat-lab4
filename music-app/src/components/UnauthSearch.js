@@ -58,6 +58,15 @@ export const UnauthSearch = () => {
             infoList.appendChild(document.createTextNode(data.track_title + ' by ' + data.artist_name));
             infoList.appendChild(document.createElement('br'));
 
+            var youtubeBtn = document.createElement('button');
+            youtubeBtn.style.height = '20px';
+            youtubeBtn.style.width = '55px';
+            youtubeBtn.innerHTML = 'Play';
+            youtubeBtn.addEventListener('click', () => {window.open(data.track_url, '_blank')});
+            
+            infoList.appendChild(youtubeBtn);
+            infoList.appendChild(document.createElement('br'));
+
             infoList.appendChild(document.createTextNode('Album: ' + data.album_title));
             infoList.appendChild(document.createElement('br'));
             
@@ -73,18 +82,9 @@ export const UnauthSearch = () => {
             infoList.appendChild(document.createTextNode('Date Created: ' + data.track_date_created));
             infoList.appendChild(document.createElement('br'));
 
-            var youtubeBtn = document.createElement('button');
-            youtubeBtn.style.height = '20px';
-            youtubeBtn.style.width = '120px';
-            youtubeBtn.innerHTML = 'Play on Youtube';
-            youtubeBtn.addEventListener('click', () => {window.open(data.track_url, '_blank')});
-            
-            infoList.appendChild(youtubeBtn);
-            infoList.appendChild(document.createElement('br'));
-
             var closeBtn = document.createElement('button');
             closeBtn.style.height = '20px';
-            closeBtn.style.width = '80px';
+            closeBtn.style.width = '55px';
             closeBtn.innerHTML = 'Close';
             closeBtn.addEventListener('click', clearInfoList);
             
@@ -142,18 +142,20 @@ export const UnauthSearch = () => {
                 </center>
             </div>
 
-            <center>
-            <div id="additionalInfo">
-                <ol id="infoList">
+            
+            <div id="additionalInfo" style={{textAlign: 'center'}}>
+                <center>
+                <ol id="infoList" style={{paddingLeft: '0', textAlign: 'left', display: 'inline-block'}}>
                     
                 </ol>
+                </center>
             </div>
-            </center>
             
             
-            <div id="searchResults">
+            
+            <div id="searchResults" style={{textAlign: 'center'}}>
                 
-                    <ol id="searchList">
+                    <ol id="searchList" style={{paddingLeft: '0', textAlign: 'left', display: 'inline-block'}}>
                         
                     </ol>
                 

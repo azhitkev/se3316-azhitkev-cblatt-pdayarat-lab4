@@ -423,7 +423,7 @@ app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
   let sql2 = `DELETE FROM playlist_data WHERE playlist_name = '${req.params.pname}'`
   db.query(sql2, (err, result) => {
     if (err) throw err;
-    res.send("Playlist  Deleated...");
+    res.send("Playlist  Deleted...");
   });
   db.query(sql, (err, result) => {
   });
