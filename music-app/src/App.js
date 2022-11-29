@@ -7,10 +7,11 @@ import { history } from "./helpers/history";
 // import { setAuthToken } from "./helpers/setAuthToken";
 import { RegistrationForm } from "./components/RegistrationForm";
 import { Logout } from "./components/Logout";
-import  { UnauthSearch } from "./components/UnauthSearch";
-import { UnauthPlaylists} from "./components/UnauthPlaylists";
-import AuthPlaylistView from "./components/AuthPlaylistView";
-
+import { UnauthSearch } from "./components/UnauthSearch";
+import { UnauthPlaylists } from "./components/UnauthPlaylists";
+import PersonalAuthPlaylistView from "./components/personalAuthPlaylistView";
+import PublicPlaylistView from "./components/publicPlaylistView";
+import AuthPlaylistView from "./components/authPlaylistView";
 
 function App() {
   //check jwt token
@@ -27,10 +28,9 @@ function App() {
         <Route path="/logged-out" element={<Logout />}></Route>
         <Route path="/unauth-search" element={<UnauthSearch />}></Route>
         <Route path="/unauth-playlists" element={<UnauthPlaylists />}></Route>
-        <Route
-          path="api/authenticated/playlistview"
-          element={<AuthPlaylistView />}
-        ></Route>
+        <Route path="api/authenticated/personal/playlistview"element={<PersonalAuthPlaylistView />}></Route>
+        <Route path="api/playlistview" element={<PublicPlaylistView />}></Route>
+        <Route path="api/authenticated/playlistview" element={<AuthPlaylistView />}></Route>
         <Route
           path="/dashboard"
           element={
