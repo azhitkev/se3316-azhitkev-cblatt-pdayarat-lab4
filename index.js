@@ -443,8 +443,6 @@ app.post("/api/authenticated/playlist/description/:pname/:desc", (req, res) => {
   });
 });
 
-
-
 //Insert song into playlist
 app.post("/api/authenticated/playlist/addtrack/:pName/:tID", (req, res) => {
   let playlistName = req.params.pName;
@@ -484,7 +482,7 @@ app.delete("/api/authenticated/playlists/deletetrack/:pname/:tID", (req, res) =>
   let sql = `DELETE FROM ${req.params.pname} WHERE TrackID = '${req.params.tID}'`
   db.query(sql, (err, result) => {
     if (err) throw err;
-    res.send("Track  Deleated...");
+    res.send(result);
   })
 });
 
@@ -510,7 +508,7 @@ app.get("/api/playlists/info/:pname", (req, res) => {
 });
 
 //Delete playlist
-app.delete("/playlists/delete/:pname", (req, res) => {
+app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
   let sql = `DROP TABLE ${req.params.pname}`;
   db.query(sql, (err, result) => {
     if (err) throw err;
