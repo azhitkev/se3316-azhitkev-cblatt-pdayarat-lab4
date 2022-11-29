@@ -20,24 +20,24 @@ code {
 #t1 {
   font-weight: bold;
 }
-table {
+#t1 {
   border-collapse: collapse;
   width: 90%;
   border: none;
   margin-left: auto;
   margin-right: auto;
 }
-table td,
+#t1 td,
 #t1 th {
-  padding: 8px;
+  padding: 8spx;
 }
-table tr:nth-child(odd) {
+#t1 tr:nth-child(odd) {
   background-color: #f2f2f2;
 }
-table tr:hover {
+#t1 tr:hover {
   background-color: #ddd;
 }
-table th {
+#t1 th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
@@ -73,3 +73,39 @@ th:last-child {
   font-size: 13px;
   color: rgb(14, 13, 13);
 }
+.btn1 {
+  margin-left: 10px;
+  align-items: center;
+  background: none;
+  height: 16px;
+  padding: 0 10px 0 10px;
+  letter-spacing: .25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.btn-edit {
+  font-size: 8px;
+  color: rgb(99, 96, 96);
+}
+/* Css for comments on playlists */
+#cmnts{
+  margin-top: 25px;
+  margin-left: 80px;
+}
+#t2 {
+  
+  width: 25%;
+  border: none;
+  margin-left: 80px;
+  margin-right: 500px;
+  margin-bottom: 50px;
+}
+#t2 tr {
+  padding: 5px 0;
+}
+h4{
+  margin-left: 80px;
+  font-weight: lighter;
+}
+
+  
