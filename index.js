@@ -5,7 +5,7 @@ const router = express.Router();
 const csv = require("csv-parser");
 const cors = require("cors");
 app.use(cors());
-const Fuse = require("fuse.js")
+const Fuse = require("fuse.js");
 
 const fs = require("fs");
 var genres = [];
@@ -57,7 +57,7 @@ function tracksProperties(show) {
     track_genres,
     track_number,
     track_title,
-    track_url
+    track_url,
   } = show;
   return {
     track_id,
@@ -72,7 +72,7 @@ function tracksProperties(show) {
     track_genres,
     track_number,
     track_title,
-    track_url
+    track_url,
   };
 }
 
@@ -191,7 +191,7 @@ app.get("/api/tracks/:unauthSearch", (req, res) => {
 
   var results = fuse.search(input);
 
-  var resultsStr = '';
+  var resultsStr = "";
 
   // looping through the fuzzy search results array
   for (var i = 0; i < results.length; i++) {
@@ -206,14 +206,16 @@ app.get("/api/tracks/:unauthSearch", (req, res) => {
   }
 
   // if if one or more matching tracks are found, send the trackResults array
-<<<<<<< Updated upstream
-  if(trackResults.length > 0){
-    for(var i=0; i<trackResults.length; i++){
-      resultsStr += trackResults[i].item.track_title + '\xa0\xa0\xa0\xa0' + 'By: ' + trackResults[i].item.artist_name + ';';
-    }
-=======
   if (trackResults.length > 0) {
->>>>>>> Stashed changes
+    for (var i = 0; i < trackResults.length; i++) {
+      resultsStr +=
+        trackResults[i].item.track_title +
+        "\xa0\xa0\xa0\xa0" +
+        "By: " +
+        trackResults[i].item.artist_name +
+        ";";
+    }
+
     res.send(trackResults);
   }
   // if no matches are found, send the status and an error message
@@ -221,29 +223,16 @@ app.get("/api/tracks/:unauthSearch", (req, res) => {
     res.status(404).send(`Track ${input} was not found!`);
   }
 });
-<<<<<<< Updated upstream
 
 // search for track by track ID
-app.get('/api/tracks/getInfo/:trackID', (req, res) => {
+app.get("/api/tracks/getInfo/:trackID", (req, res) => {
   const input = req.params.trackID;
-  const track = tracks.find(tr => tr.track_id == input);
+  const track = tracks.find((tr) => tr.track_id == input);
   res.send(track);
-})
-
-
+});
 
 // ------------------------------------------------------
 
-
-
-
-
-
-=======
-
-// ------------------------------------------------------
-
->>>>>>> Stashed changes
 //Get Atrist info from ID
 app.get("/api/artists/info/:artistID", (req, res) => {
   const id = req.params.artistID;
@@ -566,6 +555,38 @@ app.post("/register", (req, res) => {
 
   db.query(sql, (err, result) => {
     if (err) throw err;
+    res.send(result);
+  });
+});
+
+app.get("/role/:email", (req, res) => {
+  const email = req.params.email;
+
+  let sql = `SELECT role FROM Users WHERE email = "${email}"`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    res.send(result);
+  });
+});
+
+//Get all users (usernames) and their current role as stored in the db
+app.get("/userInfo", (req, res) => {
+  let sql = `SELECT username, role FROM Users`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
+app.post("/admin/:userName/:roleValue", (req, res) => {
+  const username = req.params.userName;
+  const role = req.params.roleValue;
+
+  let sql = `UPDATE Users SET role = '${role}' WHERE username = '${username}'`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
     res.send(result);
   });
 });

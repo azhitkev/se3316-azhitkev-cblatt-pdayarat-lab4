@@ -21,19 +21,21 @@ const PlaylistView = () => {
   };
 
   //Method to delete tracks in playlist
-  const deleteTrack = async (id)=>{
+  const deleteTrack = async (id) => {
     console.warn(id);
-    let result = await fetch(`http://localhost:4000/api/authenticated/playlists/deletetrack/${name.toLowerCase()}/${parseInt(id)}`,{
-      method:"Delete"
-    });
+    let result = await fetch(
+      `http://localhost:4000/api/authenticated/playlists/deletetrack/${name.toLowerCase()}/${parseInt(
+        id
+      )}`,
+      {
+        method: "Delete",
+      }
+    );
     result = await result.json();
-    if(result){
+    if (result) {
       getPlaylists();
     }
-
-    
-
-  }
+  };
 
   //Html for page
   return (
@@ -45,29 +47,34 @@ const PlaylistView = () => {
       <div className="track-list">
         <table id="t1">
           <tbody>
-          <tr>
-            <th>T .No</th>
-            <th>Track</th>
-            <th>Artist</th>
-            <th>Album</th>
-            <th>Play Time</th>
-            <th>
-              <button>Delete playlist</button>
-            </th>
-          </tr>
-
-          {products.map((item) => (
             <tr>
-              <td>{item.TrackID}</td>
-              <td>{item.Track}</td>
-              <td>{item.Artist}</td>
-              <td>{item.Album}</td>
-              <td>{item.PlayTime}</td>
-              <td>
-                <button onClick={()=> deleteTrack(item.TrackID)} className="btn btn-delete">Remove</button>
-              </td>
+              <th>T .No</th>
+              <th>Track</th>
+              <th>Artist</th>
+              <th>Album</th>
+              <th>Play Time</th>
+              <th>
+                <button>Delete playlist</button>
+              </th>
             </tr>
-          ))}
+
+            {products.map((item) => (
+              <tr>
+                <td>{item.TrackID}</td>
+                <td>{item.Track}</td>
+                <td>{item.Artist}</td>
+                <td>{item.Album}</td>
+                <td>{item.PlayTime}</td>
+                <td>
+                  <button
+                    onClick={() => deleteTrack(item.TrackID)}
+                    className="btn btn-delete"
+                  >
+                    Remove
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
