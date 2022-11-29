@@ -7,7 +7,9 @@ import { history } from "./helpers/history";
 // import { setAuthToken } from "./helpers/setAuthToken";
 import { RegistrationForm } from "./components/RegistrationForm";
 import { Logout } from "./components/Logout";
+import  { UnauthSearch } from "./components/UnauthSearch";
 import AuthPlaylistView from "./components/AuthPlaylistView";
+
 
 function App() {
   //check jwt token
@@ -22,6 +24,7 @@ function App() {
         <Route path="/register" element={<RegistrationForm />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/logged-out" element={<Logout />}></Route>
+        <Route path="/unauth-search" element={<UnauthSearch />}></Route>
         <Route
           path="api/authenticated/playlistview"
           element={<AuthPlaylistView />}
