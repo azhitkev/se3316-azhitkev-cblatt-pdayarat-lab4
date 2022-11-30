@@ -1,8 +1,21 @@
 import React from "react";
 import { Link } from 'react-router-dom';
+import PublicPlaylistView from "./publicPlaylistView";
 
 
 export const UnauthPlaylists = () => {
+
+    var plName = '';
+
+    function changePlName(newName){
+        plName = newName;
+        
+    }
+
+    
+    
+
+    
 
     function clearInfoList(){
         while(document.getElementById('infoList').firstChild){
@@ -21,16 +34,26 @@ export const UnauthPlaylists = () => {
                 playlists.removeChild(playlists.firstChild);
             }
 
-            for(let i=0; i<10; i++){
-                playlists.appendChild(document.createTextNode(data[i].playlist_name + ' by ' + data[i].owner));
+            for(let i=0; i<data.length; i++){
+                playlists.appendChild(document.createTextNode(data[i].playlist_name + ' by ' + data[i].owner + '\xa0\xa0\xa0\xa0'));
 
                 var infoBtn = document.createElement('button');
                 infoBtn.style.height = '20px';
-                infoBtn.style.width = '80px';
+                infoBtn.style.width = '70px';
                 infoBtn.innerHTML = 'Get Info';
                 infoBtn.addEventListener('click', () => {playlistInfo(data[i].playlist_name, data[i].owner)});
                 playlists.appendChild(infoBtn);
 
+                
+
+                infoBtn.addEventListener('click', () => {changePlName(data[i].playlist_name)});
+                
+
+                //infoBtn.addEventListener('click', () => )
+                
+                
+
+                playlists.appendChild(document.createElement('br'));
                 playlists.appendChild(document.createElement('br'));
 
                 let numPlaylists = playlists.childNodes.length;
@@ -68,13 +91,28 @@ export const UnauthPlaylists = () => {
                 infoList.appendChild(document.createTextNode('Total Duration: ' + data[i].duration + ' Minutes'));
                 infoList.appendChild(document.createElement('br'));
 
+                var link = document.createElement('a');
+                link.href = 'http://localhost:3000/api/playlistview'
+                
+                var linkBtn = document.createElement('button');
+                linkBtn.style.height = '20px';
+                linkBtn.style.width = '100px';
+                linkBtn.innerHTML = 'Show Playlist';
+                linkBtn.addEventListener('click', () => {link.click()});
+                infoList.appendChild(linkBtn);
+                infoList.appendChild(document.createElement('br'));
+
+
                 var closeBtn = document.createElement('button');
                 closeBtn.style.height = '20px';
                 closeBtn.style.width = '55px';
                 closeBtn.innerHTML = 'Close';
                 closeBtn.addEventListener('click', clearInfoList);
-                infoList.appendChild(closeBtn);
+                infoList.appendChild(closeBtn);   
+
             }
+
+
 
 
 
@@ -121,8 +159,12 @@ export const UnauthPlaylists = () => {
                 <ol id="publicPlaylistsList" style={{paddingLeft: '0', textAlign: 'left', display: 'inline-block'}}>
                     
                 </ol>
+                
             </div>
+            <PublicPlaylistView someText = {plName}/>
         </div>
+
+        
         </body>
         
         
