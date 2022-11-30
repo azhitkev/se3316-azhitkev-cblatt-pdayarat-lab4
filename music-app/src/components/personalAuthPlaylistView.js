@@ -122,6 +122,30 @@ const PlaylistView = () => {
     setUpdate(rating);
   };
 
+//Seting description to new updated description
+
+  const [desciption, setdesciption] = useState("");
+  const [newDesc, setnewDesc] = useState(desciption);
+  const handleChange3 = (event) => {
+    setdesciption(event.target.value);
+  };
+  const handleClick3 = () => {
+    // "message" stores input field value
+    setnewDesc(desciption);
+  };
+
+  //Changes Descripton to what user wants
+  const updateDescription = async () => {
+    let result = await fetch(
+      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${newDesc}`,
+      {
+        method: "Post",
+      }
+    );
+    result = await result.json();
+  };
+
+
   //Shows information for each individual track
   function trackInfo(trackId) {
     fetch("/api/tracks/getInfo/" + trackId).then((res) =>
@@ -185,20 +209,10 @@ const PlaylistView = () => {
     }
   }
 
-  //Changes Descripton to what user wants
-  const updateDescription = async (id) => {
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${id}}`,
-      {
-        method: "Post",
-      }
-    );
-    result = await result.json();
-  };
 
   //Deletes playlist and routes you to home
-  const deletePlaylist = async (id) => {
-    let result = await fetch(`Put stuff here`, {
+  const deletePlaylist = async () => {
+    let result = await fetch(`/api/authenticated/playlists/delete/${name.toLowerCase()}`, {
       method: "Delete",
     });
     result = await result.json();
@@ -212,10 +226,27 @@ const PlaylistView = () => {
         {info.map((item) => (
           <p>
             Description: {item.description}
-            <button onClick={updateDescription} className="btn1 btn-edit">
-              Edit
-            </button>
-            <br></br> Owner: {item.owner}
+            <div id="desciption-info">
+              <form onSubmit={updateDescription} id="info">
+                <input
+                  type="text"
+                  id="message"
+                  name="message"
+                  onChange={handleChange3}
+                  value={desciption}
+                ></input>
+
+                <button
+                  onClick={function (event) {
+                    handleClick3();
+                  }}
+                  className="btn1 btn-edit"
+                >
+                  Update
+                </button>
+              </form>
+            </div>
+             Owner: {item.owner}
             <br></br>
             Status: {item.status}
             <button
@@ -246,7 +277,7 @@ const PlaylistView = () => {
               <th>Play Time</th>
               <th>Info</th>
               <th>
-                <button>Delete playlist</button>
+                <button onClick={() => deletePlaylist()}>Delete playlist</button>
               </th>
             </tr>
 
@@ -309,7 +340,7 @@ const PlaylistView = () => {
             }}
             className="btn1 btn-edit"
           >
-            Update
+            Enter
           </button>
         </form>
 

@@ -41,7 +41,7 @@ code {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
-  background-color: skyblue;
+  background-color: rgb(47, 43, 43);
   color: white;
 }
 td:first-child,
@@ -113,5 +113,7 @@ h4{
   margin-left: 80px;
   font-weight: lighter;
 }
+/* Description changer */
+
 
   
