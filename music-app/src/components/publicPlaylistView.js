@@ -1,12 +1,19 @@
 //Needed Inports:
+import { stripBasename } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
+import { UnauthPlaylists } from "./UnauthPlaylists";
 
-//Varibale to hold name of displaying playlist
-var name = "Rap";
+
 
 
 //Main component of page
-const PublicPlaylistView = () => {
+const PublicPlaylistView = ({someText}) => {
+
+  
+
+  //Varibale to hold name of displaying playlist
+  var name = someText;
+
   const [playlists, setplaylists] = useState([]);
 
   const [info, setinfo] = useState([]);
