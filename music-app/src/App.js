@@ -25,7 +25,6 @@ function App() {
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/logged-out" element={<Logout />}></Route>
         <Route path="/unauth-search" element={<UnauthSearch />}></Route>
-        <Route path="/admin-panel" element={<AdminPanel />}></Route>
         <Route
           path="api/authenticated/playlistview"
           element={<AuthPlaylistView />}
@@ -38,6 +37,7 @@ function App() {
             </RouteGuard>
           }
         />
+        <Route path="/admin-panel" element={<AdminPanel />}></Route>
       </Routes>
     </div>
   );

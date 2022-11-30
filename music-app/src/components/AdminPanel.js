@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { auth } from "../firebase-config";
+import { signOut } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
@@ -18,7 +21,14 @@ export default function AdminPage() {
     getAllUsers();
   }, []);
 
+  const logout = async () => {
+    console.log(auth.currentUser);
+    await signOut(auth);
+    console.log("logged out");
+  };
+
   const getAllUsers = async () => {
+    console.log(auth);
     let result = await fetch(`http://localhost:4000/userInfo`);
     result = await result.json();
     setUsers(result);
@@ -76,6 +86,9 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
+      <button type="submit" onClick={logout} class="btn">
+        Log Out
+      </button>
     </div>
   );
 }

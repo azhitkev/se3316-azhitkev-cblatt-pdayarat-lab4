@@ -9,6 +9,7 @@ export const Dashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("WE ARE HERE", auth.currentUser.email);
     if (auth.currentUser !== null) {
       Axios.get(`http://localhost:4000/role/${auth.currentUser.email}`).then(
         (response) => {
@@ -17,6 +18,12 @@ export const Dashboard = () => {
       );
     }
   }, []);
+
+  function navToAdmin() {
+    if (role === "admin") {
+      navigate("/admin-panel");
+    }
+  }
 
   const logout = async () => {
     await signOut(auth);
@@ -29,6 +36,7 @@ export const Dashboard = () => {
       {" "}
       What it looks like when members are signed in
       <h1>Role: {role}</h1>
+      {role === "admin" && <button onClick={navToAdmin}>Admin panel</button>}
       <button onClick={logout}>Log out</button>
     </div>
   );

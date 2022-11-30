@@ -579,6 +579,17 @@ app.get("/userInfo", (req, res) => {
   });
 });
 
+//get a specific user's role as it is stored in the db
+app.get("/userInfo/:email", (req, res) => {
+  const email = req.params.email;
+  let sql = `SELECT role FROM Users WHERE email = "${email}"`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
+
 app.post("/admin/:userName/:roleValue", (req, res) => {
   const username = req.params.userName;
   const role = req.params.roleValue;

@@ -9,6 +9,16 @@ export function LoginPage() {
   const [emailLogin, setEmailLogin] = useState(null);
   const [passwordLogin, setPasswordLogin] = useState(null);
   const navigate = useNavigate();
+  let userRole;
+
+  //checks the role of the user upon login (to see whether they should have admin priviledges or regular user priviledges)
+  const checkUserRole = async () => {
+    userRole = await fetch(
+      `http://localhost:4000/userInfo/${auth.currentUser.email}`
+    );
+    userRole = await userRole.json();
+    console.log("THE USER ROLE IS:" + userRole);
+  };
 
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser) => {
@@ -35,6 +45,7 @@ export function LoginPage() {
         emailLogin,
         passwordLogin
       );
+      checkUserRole();
       console.log(user);
     } catch (error) {
       console.log(error.message);
@@ -82,8 +93,8 @@ export function LoginPage() {
         {user?.email && !user?.emailVerified && (
           <h2>Please verify your account in order to log in.</h2>
         )}
-        {/* this renders if the user did verify their email, MAKE IT SHOW THE DASHBOARD COMPONENT?*/}
         {user?.emailVerified && navigate("/dashboard")}
+        {user?.email === "admin@admin.com" && navigate("/admin-panel")}
         <button type="submit" onClick={login} class="btn">
           Login
         </button>
