@@ -68,11 +68,6 @@ export const UnauthSearch = ({ role }) => {
         );
         infoList.appendChild(document.createElement("br"));
 
-        infoList.appendChild(
-          document.createTextNode("Album: " + data.album_title)
-        );
-        infoList.appendChild(document.createElement("br"));
-
         var youtubeBtn = document.createElement("button");
         youtubeBtn.style.height = "20px";
         youtubeBtn.style.width = "55px";

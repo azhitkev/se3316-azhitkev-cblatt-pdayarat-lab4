@@ -178,6 +178,7 @@ export const UnauthPlaylists = () => {
             id="playlistInput"
             size="25"
             placeholder="Create Playlist"
+            style={{marginBottom: '30px'}}
           ></input>
 
           <button
@@ -185,6 +186,7 @@ export const UnauthPlaylists = () => {
               createPlaylist();
             }}
             className="btn3 btn-edit"
+            style={{marginBottom: '30px'}}
           >
             Create
           </button>

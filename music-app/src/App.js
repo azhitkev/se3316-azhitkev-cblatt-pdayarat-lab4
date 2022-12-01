@@ -13,6 +13,9 @@ import { UnauthPlaylists } from "./components/UnauthPlaylists";
 import PersonalAuthPlaylistView from "./components/personalAuthPlaylistView";
 import PublicPlaylistView from "./components/publicPlaylistView";
 import AuthPlaylistView from "./components/AuthPlaylistView";
+import { PolicySecurity } from "./components/PolicySecurity";
+import { PolicyDCMA } from "./components/PolicyDCMA";
+import { PolicyAUP } from "./components/PolicyAUP";
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
         <Route path="/logged-out" element={<Logout />}></Route>
         <Route path="/" element={<UnauthSearch />}></Route>
         <Route path="/unauth-playlists" element={<UnauthPlaylists />}></Route>
+        <Route path="/security-and-privacy" element={<PolicySecurity />}></Route>
+        <Route path="/dcma-notice" element={<PolicyDCMA />}></Route>
+        <Route path="/aup-policy" element={<PolicyAUP />}></Route>
         <Route
           path="api/authenticated/personal/playlistview/:id"
           element={<PersonalAuthPlaylistView />}
