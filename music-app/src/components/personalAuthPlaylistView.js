@@ -4,6 +4,9 @@ import { useNavigate, useParams } from "react-router-dom";
 
 //Varibale to hold name of displaying playlist
 
+var name = "public1";
+var user = "cam";
+
 
 //Main component of page
 const PlaylistView = () => {
@@ -223,6 +226,65 @@ const PlaylistView = () => {
     result = await result.json();
   };
 
+  // search for tracks
+  function searchTracks(){
+    var input = document.getElementById('textBox').value;
+
+    fetch('/api/tracks/' + input)
+    .then(res => res.json()
+    .then(data => {
+    
+    
+
+      var searchList = document.getElementById('searchList');
+
+      while(searchList.firstChild){
+        searchList.removeChild(searchList.firstChild);
+      }
+
+      searchList.appendChild(document.createElement('br'));
+
+      for(let i=0; i<data.length; i++){
+        searchList.appendChild(document.createTextNode(data[i].item.track_title + ' by ' + data[i].item.artist_name + '\xa0\xa0\xa0\xa0'));
+
+        var addBtn = document.createElement('button');
+        addBtn.style.height = '20px';
+        addBtn.style.width = '120px';
+        addBtn.innerHTML = 'Add to Playlist';
+        searchList.appendChild(addBtn);
+
+        addBtn.addEventListener('click', () => {addTracks(data[i].item.track_id)});
+
+        searchList.appendChild(document.createElement('br'));
+        searchList.appendChild(document.createElement('br'));
+      }
+    }))
+  }
+
+  
+  // add track to a playlist
+  function addTracks(trackID){
+    fetch('/api/authenticated/playlist/addtrack/' + name + '/' + trackID, {
+      method: 'POST',
+      headers: {'Content-type': 'application/json'}
+    })
+    .then(res => {
+      if(res.ok){
+        res.json()
+        .then(data => {
+
+          getPlaylists();
+
+        })
+        .catch(err => alert('Failed to get JSON object'))
+      }
+      else{
+        alert('Error: ' + res.status)
+      }
+    })
+    .catch()
+  }
+
   //Html for page
   return (
     <React.Fragment>
@@ -367,6 +429,23 @@ const PlaylistView = () => {
             ))}
           </tbody>
         </table>
+      </div>
+      <div id="trackSearch">
+        <br />
+        <h5 style={{marginLeft: '80px'}}>Add Tracks</h5>
+        <input 
+          type="text" 
+          id="textBox" 
+          size="50" 
+          placeHolder="Enter track, artist, album, or genre"
+          style={{marginLeft: '80px', marginTop: '0px'}}>
+        </input>
+        <input type="button" id="searchButton" value="search" onClick={() => {searchTracks();}}></input>
+      </div>
+      <div id="searchResults" style={{marginLeft: '80px', marginBottom: '50px'}}>
+        <ol id="searchList">
+
+        </ol>
       </div>
     </React.Fragment>
   );

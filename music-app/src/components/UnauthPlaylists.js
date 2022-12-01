@@ -12,10 +12,39 @@ export const UnauthPlaylists = () => {
     }
   }
 
-  function publicPlaylists() {
-    fetch("/api/playlists/list-names").then((res) =>
-      res.json().then((data) => {
-        var playlists = document.getElementById("publicPlaylistsList");
+
+    function publicPlaylists(){
+        fetch('/api/playlists/list-names')
+        .then(res => res.json()
+        .then(data => {
+
+            var playlists = document.getElementById('publicPlaylistsList');
+
+            while(playlists.firstChild){
+                playlists.removeChild(playlists.firstChild);
+            }
+
+            for(let i=0; i<data.length; i++){
+                playlists.appendChild(document.createTextNode(data[i].playlist_name + ' by ' + data[i].owner + '\xa0\xa0\xa0\xa0'));
+
+                var infoBtn = document.createElement('button');
+                infoBtn.style.height = '20px';
+                infoBtn.style.width = '70px';
+                infoBtn.innerHTML = 'Get Info';
+                infoBtn.addEventListener('click', () => {playlistInfo(data[i].playlist_name, data[i].owner)});
+                playlists.appendChild(infoBtn);
+
+                playlists.appendChild(document.createElement('br'));
+                playlists.appendChild(document.createElement('br'));
+
+                let numPlaylists = playlists.childNodes.length;
+                if(numPlaylists == 10){
+                    break;
+                }
+            }
+        }))
+    };
+
 
         while (playlists.firstChild) {
           playlists.removeChild(playlists.firstChild);
@@ -61,8 +90,62 @@ export const UnauthPlaylists = () => {
   function openPlaylist(passed) {
     //history('api/playlistview/'+passed)
 
-    window.open("http://localhost:3000/api/playlistview/" + passed, "_blank");
-  }
+
+        var link = document.createElement('a');
+        link.href = 'http://localhost:3000/api/playlistview/' + passed;
+        link.click();
+    }
+    
+    function playlistInfo(playlistName, playlistOwner){
+        fetch('/api/playlists/info/' + playlistName)
+        .then(res => res.json()
+        .then(data => {
+            
+            var infoList = document.getElementById('infoList');
+
+            while(infoList.firstChild){
+                infoList.removeChild(infoList.firstChild);
+            }
+
+            for(let i=0; i<data.length; i++){
+                infoList.appendChild(document.createTextNode(playlistName + ' by ' + playlistOwner));
+                infoList.appendChild(document.createElement('br'));
+
+                infoList.appendChild(document.createTextNode('Number of Tracks: ' + data[i].tracks));
+                infoList.appendChild(document.createElement('br'));
+
+                infoList.appendChild(document.createTextNode('Total Duration: ' + data[i].duration + ' Minutes'));
+                infoList.appendChild(document.createElement('br'));
+
+                var link = document.createElement('a');
+                //link.href = 'http://localhost:3000/api/playlistview'
+                
+                var linkBtn = document.createElement('button');
+                linkBtn.style.height = '20px';
+                linkBtn.style.width = '100px';
+                linkBtn.innerHTML = 'Show Playlist';
+                //linkBtn.addEventListener('click', () => {link.click()});
+                infoList.appendChild(linkBtn);
+                infoList.appendChild(document.createElement('br'));
+
+                linkBtn.addEventListener('click', () => {openPlaylist(playlistName)});
+
+                
+
+
+                var closeBtn = document.createElement('button');
+                closeBtn.style.height = '20px';
+                closeBtn.style.width = '55px';
+                closeBtn.innerHTML = 'Close';
+                closeBtn.addEventListener('click', clearInfoList);
+                infoList.appendChild(closeBtn);   
+
+            }
+        
+        }))
+    }
+
+
 
   function playlistInfo(playlistName, playlistOwner) {
     fetch("/api/playlists/info/" + playlistName).then((res) =>
@@ -72,6 +155,7 @@ export const UnauthPlaylists = () => {
         while (infoList.firstChild) {
           infoList.removeChild(infoList.firstChild);
         }
+
 
         for (let i = 0; i < data.length; i++) {
           infoList.appendChild(
