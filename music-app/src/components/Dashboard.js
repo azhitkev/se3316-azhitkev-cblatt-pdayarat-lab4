@@ -7,14 +7,16 @@ import { UnauthSearch } from "./UnauthSearch";
 
 export const Dashboard = () => {
   const [role, setRole] = useState("");
+  const [userName, setUser] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     console.log("WE ARE HERE", auth.currentUser.email);
     if (auth.currentUser !== null) {
-      Axios.get(`http://localhost:4000/role/${auth.currentUser.email}`).then(
+      Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
         (response) => {
           setRole(response.data[0].role);
+          setUser(response.data[0].userName);
         }
       );
     }
@@ -25,7 +27,7 @@ export const Dashboard = () => {
       {" "}
       What it looks like when members are signed in
       <h1>Role: {role}</h1>
-      <UnauthSearch role={role} />
+      <UnauthSearch role={role} userName={userName} />
     </div>
   );
 };
