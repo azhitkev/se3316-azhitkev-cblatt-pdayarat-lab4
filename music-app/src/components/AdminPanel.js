@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
-import { onAuthStateChanged } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
 
   const getInitialState = () => {
     const value = "default";
@@ -18,8 +19,11 @@ export default function AdminPage() {
   };
 
   useEffect(() => {
+    if (auth.currentUser === null) {
+      navigate("/login");
+    }
     getAllUsers();
-  }, []);
+  }, [navigate]);
 
   const logout = async () => {
     console.log(auth.currentUser);
