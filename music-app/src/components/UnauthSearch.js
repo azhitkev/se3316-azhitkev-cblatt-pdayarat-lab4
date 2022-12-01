@@ -80,14 +80,24 @@ export const UnauthSearch = () => {
             infoList.appendChild(document.createTextNode('Album: ' + data.album_title));
             infoList.appendChild(document.createElement('br'));
 
-            infoList.appendChild(document.createTextNode('******NEED TO ADD GENRE'));
+
+            var genresArr = data.track_genres;
+            genresArr = genresArr.replace(/'/g, '"');
+            genresArr = JSON.parse(genresArr);
+
+            var genreNamesArr = [];
+            
+            for(let i=0; i<genresArr.length; i++){
+                genreNamesArr.push(genresArr[i].genre_title);
+            }
+
+            var genreNamesStr = genreNamesArr.join(', ');
+
+
+            
+            infoList.appendChild(document.createTextNode('Genre(s): ' + genreNamesStr));
             infoList.appendChild(document.createElement('br'));
             
-            /*
-            NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
-            infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
-            infoList.appendChild(document.createElement('br'));
-            */
 
             infoList.appendChild(document.createTextNode('Play-Length: ' + data.track_duration));
             infoList.appendChild(document.createElement('br'));
