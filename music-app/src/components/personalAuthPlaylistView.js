@@ -6,7 +6,7 @@ var name = "Rap";
 var user = "Tisal";
 
 //Main component of page
-const AuthPlaylistView = () => {
+const PlaylistView = () => {
   const [playlists, setplaylists] = useState([]);
 
   const [info, setinfo] = useState([]);
@@ -122,10 +122,22 @@ const AuthPlaylistView = () => {
     setUpdate(rating);
   };
 
+//Seting description to new updated description
+
+  const [desciption, setdesciption] = useState("");
+  const [newDesc, setnewDesc] = useState(desciption);
+  const handleChange3 = (event) => {
+    setdesciption(event.target.value);
+  };
+  const handleClick3 = () => {
+    // "message" stores input field value
+    setnewDesc(desciption);
+  };
+
   //Changes Descripton to what user wants
-  const updateDescription = async (id) => {
+  const updateDescription = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${id}}`,
+      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${newDesc}`,
       {
         method: "Post",
       }
@@ -133,60 +145,78 @@ const AuthPlaylistView = () => {
     result = await result.json();
   };
 
+
   //Shows information for each individual track
-  function trackInfo(trackId){
-
-    fetch('/api/tracks/getInfo/' + trackId)
-    .then(res => res.json()
-    .then(data => {
-
-        var infoList = document.getElementById('infoList');
+  function trackInfo(trackId) {
+    fetch("/api/tracks/getInfo/" + trackId).then((res) =>
+      res.json().then((data) => {
+        var infoList = document.getElementById("infoList");
 
         //infoList.appendChild(document.createTextNode(data.track_title));
-        infoList.appendChild(document.createTextNode(data.track_title + ' by ' + data.artist_name));
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(
+          document.createTextNode(data.track_title + " by " + data.artist_name)
+        );
+        infoList.appendChild(document.createElement("br"));
 
-        infoList.appendChild(document.createTextNode('Album: ' + data.album_title));
-        infoList.appendChild(document.createElement('br'));
-        
+        infoList.appendChild(
+          document.createTextNode("Album: " + data.album_title)
+        );
+        infoList.appendChild(document.createElement("br"));
+
         /*
-        NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
-        infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
-        infoList.appendChild(document.createElement('br'));
-        */
+          NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
+          infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
+          infoList.appendChild(document.createElement('br'));
+          */
 
-        infoList.appendChild(document.createTextNode('Play-Length: ' + data.track_duration));
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(
+          document.createTextNode("Play-Length: " + data.track_duration)
+        );
+        infoList.appendChild(document.createElement("br"));
 
-        infoList.appendChild(document.createTextNode('Date Created: ' + data.track_date_created));
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(
+          document.createTextNode("Date Created: " + data.track_date_created)
+        );
+        infoList.appendChild(document.createElement("br"));
 
-        var youtubeBtn = document.createElement('button');
-        youtubeBtn.style.height = '20px';
-        youtubeBtn.style.width = '120px';
-        youtubeBtn.innerHTML = 'Play on Youtube';
-        youtubeBtn.addEventListener('click', () => {window.open(data.track_url, '_blank')});
-        
+        var youtubeBtn = document.createElement("button");
+        youtubeBtn.style.height = "20px";
+        youtubeBtn.style.width = "120px";
+        youtubeBtn.innerHTML = "Play on Youtube";
+        youtubeBtn.addEventListener("click", () => {
+          window.open(data.track_url, "_blank");
+        });
+
         infoList.appendChild(youtubeBtn);
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(document.createElement("br"));
 
-        var closeBtn = document.createElement('button');
-        closeBtn.style.height = '20px';
-        closeBtn.style.width = '80px';
-        closeBtn.innerHTML = 'Close';
-        closeBtn.addEventListener('click', clearInfoList);
-        
+        var closeBtn = document.createElement("button");
+        closeBtn.style.height = "20px";
+        closeBtn.style.width = "80px";
+        closeBtn.innerHTML = "Close";
+        closeBtn.addEventListener("click", clearInfoList);
+
         infoList.appendChild(closeBtn);
-
-    }))
-}
-//Clears track info div
-     function clearInfoList(){
-        while(document.getElementById('infoList').firstChild){
-            document.getElementById('infoList').removeChild(document.getElementById('infoList').firstChild);
-        }
+      })
+    );
+  }
+  //Clears track info div
+  function clearInfoList() {
+    while (document.getElementById("infoList").firstChild) {
+      document
+        .getElementById("infoList")
+        .removeChild(document.getElementById("infoList").firstChild);
     }
+  }
 
+
+  //Deletes playlist and routes you to home
+  const deletePlaylist = async () => {
+    let result = await fetch(`/api/authenticated/playlists/delete/${name.toLowerCase()}`, {
+      method: "Delete",
+    });
+    result = await result.json();
+  };
 
   //Html for page
   return (
@@ -196,22 +226,45 @@ const AuthPlaylistView = () => {
         {info.map((item) => (
           <p>
             Description: {item.description}
+            <div id="desciption-info">
+              <form onSubmit={updateDescription} id="info">
+                <input
+                  type="text"
+                  id="message"
+                  name="message"
+                  onChange={handleChange3}
+                  value={desciption}
+                ></input>
 
-            <br></br> Owner: {item.owner}
+                <button
+                  onClick={function (event) {
+                    handleClick3();
+                  }}
+                  className="btn1 btn-edit"
+                >
+                  Update
+                </button>
+              </form>
+            </div>
+             Owner: {item.owner}
             <br></br>
             Status: {item.status}
+            <button
+              onClick={() => changeStatusInfo(item.status)}
+              className="btn1 btn-edit"
+            >
+              Switch
+            </button>
             <br></br> Rating: {item.rating}
             <br></br> Edited: {item.last_edited}
           </p>
         ))}
       </div>
       <center>
-            <div id="additionalInfo">
-                <ol id="infoList">
-                    
-                </ol>
-            </div>
-            </center>
+        <div id="additionalInfo">
+          <ol id="infoList"></ol>
+        </div>
+      </center>
 
       <div className="track-list">
         <table id="t1">
@@ -222,8 +275,9 @@ const AuthPlaylistView = () => {
               <th>Artist</th>
               <th>Album</th>
               <th>Play Time</th>
+              <th>Info</th>
               <th>
-                Info
+                <button onClick={() => deletePlaylist()}>Delete playlist</button>
               </th>
             </tr>
 
@@ -240,6 +294,14 @@ const AuthPlaylistView = () => {
                     className="btn btn-delete"
                   >
                     Info
+                  </button>
+                </td>
+                <td>
+                  <button
+                    onClick={() => deleteTrack(item.TrackID)}
+                    className="btn btn-delete"
+                  >
+                    Remove
                   </button>
                 </td>
               </tr>
@@ -271,10 +333,20 @@ const AuthPlaylistView = () => {
             min={"0"}
           ></input>
 
-          <button onClick={function(event){ handleClick(); handleClick2()}} className="btn1 btn-edit">Update</button>
+          <button
+            onClick={function (event) {
+              handleClick();
+              handleClick2();
+            }}
+            className="btn1 btn-edit"
+          >
+            Enter
+          </button>
         </form>
 
-        <h4>Comment: {message} <br></br>Rating: {rating}</h4>
+        <h4>
+          Comment: {message} <br></br>Rating: {rating}
+        </h4>
         <h3>Comments:</h3>
         <table id="t2">
           <tbody>
@@ -294,4 +366,4 @@ const AuthPlaylistView = () => {
     </React.Fragment>
   );
 };
-export default AuthPlaylistView;
+export default PlaylistView;

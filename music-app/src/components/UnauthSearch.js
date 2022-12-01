@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 export const UnauthSearch = () => {
   function clearList() {
@@ -67,80 +68,114 @@ export const UnauthSearch = () => {
         );
         infoList.appendChild(document.createElement("br"));
 
-        /*
+            var youtubeBtn = document.createElement('button');
+            youtubeBtn.style.height = '20px';
+            youtubeBtn.style.width = '55px';
+            youtubeBtn.innerHTML = 'Play';
+            youtubeBtn.addEventListener('click', () => {window.open(data.track_url, '_blank')});
+            
+            infoList.appendChild(youtubeBtn);
+            infoList.appendChild(document.createElement('br'));
+
+            infoList.appendChild(document.createTextNode('Album: ' + data.album_title));
+            infoList.appendChild(document.createElement('br'));
+
+            infoList.appendChild(document.createTextNode('******NEED TO ADD GENRE'));
+            infoList.appendChild(document.createElement('br'));
+            
+            /*
             NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
             infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
             infoList.appendChild(document.createElement('br'));
             */
 
-        infoList.appendChild(
-          document.createTextNode("Play-Length: " + data.track_duration)
-        );
-        infoList.appendChild(document.createElement("br"));
+            infoList.appendChild(document.createTextNode('Play-Length: ' + data.track_duration));
+            infoList.appendChild(document.createElement('br'));
 
-        infoList.appendChild(
-          document.createTextNode("Date Created: " + data.track_date_created)
-        );
-        infoList.appendChild(document.createElement("br"));
+            infoList.appendChild(document.createTextNode('Date Created: ' + data.track_date_created));
+            infoList.appendChild(document.createElement('br'));
 
-        var youtubeBtn = document.createElement("button");
-        youtubeBtn.style.height = "20px";
-        youtubeBtn.style.width = "120px";
-        youtubeBtn.innerHTML = "Play on Youtube";
-        youtubeBtn.addEventListener("click", () => {
-          window.open(data.track_url, "_blank");
-        });
+            var closeBtn = document.createElement('button');
+            closeBtn.style.height = '20px';
+            closeBtn.style.width = '55px';
+            closeBtn.innerHTML = 'Close';
+            closeBtn.addEventListener('click', clearInfoList);
+            
+            infoList.appendChild(closeBtn);
 
-        infoList.appendChild(youtubeBtn);
-        infoList.appendChild(document.createElement("br"));
+            
+            
+        }))
 
-        var closeBtn = document.createElement("button");
-        closeBtn.style.height = "20px";
-        closeBtn.style.width = "80px";
-        closeBtn.innerHTML = "Close";
-        closeBtn.addEventListener("click", clearInfoList);
-
-        infoList.appendChild(closeBtn);
-      })
-    );
-  }
-
-  /*
-    function sayHello(){
-        var infoList = document.getElementById('infoList');
-        infoList.appendChild(document.createTextNode('hello'));
     }
-    */
 
-  return (
-    <div id="unauthSearch">
-      <div id="searchBar">
-        <br />
-        <center>
-          <input
-            type="text"
-            id="textBox"
-            size="80"
-            placeholder="Enter track, artist, album, or genre"
-          ></input>
-        </center>
-        <br />
-        <center>
-          <input
-            type="button"
-            id="searchButton"
-            value="search"
-            onClick={() => {
-              clearList();
-              search();
-            }}
-          ></input>
-        </center>
-      </div>
+    
+    
 
-      <center>
-        <div id="additionalInfo">
-          <ol id="infoList"></ol>
+    
+
+    return(
+        <div id="unauthSearch">
+            <div>
+                <div>
+                    <br />
+                    <Link to="/login" style={{marginLeft: '20px'}}>Login</Link>
+                    <Link to="/register" style={{marginLeft: '20px'}}>Register</Link>
+                    <Link to="/unauth-playlists" style={{marginLeft: '20px'}}>Playlists</Link>
+                    
+                </div>
+                <center>
+                    <span style={{fontSize: '60px', fontFamily: 'Impact'}} >MUSIC TOWN</span>
+                    <br />
+                    <span style={{fontSize: '25px', fontFamily: 'Copperplate'}}>A Web Application for Accessing Music Data</span>
+                </center>
+            </div>
+
+            <div id="searchBar">
+                <br />
+                <center>
+                    <input 
+                        type="text" 
+                        id="textBox" 
+                        size="80" 
+                        placeholder="Enter track, artist, album, or genre">
+                    </input>
+                </center>
+                <br />
+                <center>
+                    <input 
+                        type="button" 
+                        id="searchButton" 
+                        value="search"
+                        onClick={() => {
+                            clearList();
+                            search();
+                        }}>
+                    </input>
+                </center>
+            </div>
+
+            
+            <div id="additionalInfo" style={{textAlign: 'center'}}>
+                <center>
+                <ol id="infoList" style={{paddingLeft: '0', display: 'inline-block'}}>
+                    
+                </ol>
+                </center>
+            </div>
+            
+            
+            
+            <div id="searchResults" style={{textAlign: 'center'}}>
+                
+                    <ol id="searchList" style={{paddingLeft: '0', textAlign: 'left', display: 'inline-block'}}>
+                        
+                    </ol>
+                
+            </div>
+
+            
+            
         </div>
       </center>
 
