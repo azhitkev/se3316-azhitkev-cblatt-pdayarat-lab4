@@ -118,9 +118,11 @@ export const UnauthPlaylists = () => {
     );
   }
 
-  function createPlaylist(){
+  function createPlaylist() {
     let new_pName = document.getElementById("playlistInput").value;
-    fetch(`/api/authenticated/createplaylist/${new_pName}/${user}`, { method: "POST" })
+    fetch(`/api/authenticated/createplaylist/${new_pName}/${user}`, {
+      method: "POST",
+    });
     publicPlaylists();
   }
 
@@ -178,7 +180,12 @@ export const UnauthPlaylists = () => {
             placeholder="Create Playlist"
           ></input>
 
-          <button onClick={() =>{createPlaylist()}} className="btn3 btn-edit">
+          <button
+            onClick={() => {
+              createPlaylist();
+            }}
+            className="btn3 btn-edit"
+          >
             Create
           </button>
         </center>
