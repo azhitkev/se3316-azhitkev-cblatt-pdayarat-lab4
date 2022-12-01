@@ -12,14 +12,9 @@ import { Navigate } from "react-router-dom";
 //Main component of page
 const PublicPlaylistView = () => {
 
-  const params = useParams();
- 
 
   //Varibale to hold name of displaying playlist
-
-
-
-  
+  const params = useParams();
   var name = params.id;
 
   const [playlists, setplaylists] = useState([]);

@@ -1,12 +1,20 @@
 //Needed Inports:
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 //Varibale to hold name of displaying playlist
+
 var name = "public1";
 var user = "cam";
 
+
 //Main component of page
 const PlaylistView = () => {
+
+  let user = "Tisal";
+  const params = useParams();
+  var name = params.id;
+
   const [playlists, setplaylists] = useState([]);
 
   const [info, setinfo] = useState([]);
