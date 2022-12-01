@@ -4,6 +4,12 @@ import PublicPlaylistView from "./publicPlaylistView";
 
 export const UnauthPlaylists = () => {
     let user = "Tisal";
+  var plName = "";
+
+  function changePlName(newName) {
+    plName = newName;
+  }
+
   function clearInfoList() {
     while (document.getElementById("infoList").firstChild) {
       document
@@ -127,8 +133,8 @@ export const UnauthPlaylists = () => {
         <div>
           <div>
             <br />
-            <Link to="/unauth-search" style={{ marginLeft: "20px" }}>
-              Home
+            <Link to="/dashboard" style={{ marginLeft: "20px" }}>
+              Dashboard
             </Link>
           </div>
           <center>
