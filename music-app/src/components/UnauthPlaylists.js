@@ -1,14 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import PublicPlaylistView from "./publicPlaylistView";
+import { auth } from "../firebase-config";
 
 export const UnauthPlaylists = () => {
-    let user = "Tisal";
-  var plName = "";
+    let email = auth.currentUser.email;
 
-  function changePlName(newName) {
-    plName = newName;
-  }
 
   function clearInfoList() {
     while (document.getElementById("infoList").firstChild) {
@@ -117,13 +114,21 @@ export const UnauthPlaylists = () => {
       })
     );
   }
+//Creates playlist for the logged in user
+  function getOwner(){
+    fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
+    res.json().then((data) => {
+        createPlaylist(data[0].username)
 
-  function createPlaylist() {
+    }))
+  }
+  function createPlaylist(name) {
     let new_pName = document.getElementById("playlistInput").value;
-    fetch(`/api/authenticated/createplaylist/${new_pName}/${user}`, {
+    fetch(`/api/authenticated/createplaylist/${new_pName}/${name}`, {
       method: "POST",
     });
     publicPlaylists();
+    
   }
 
   return (
@@ -171,8 +176,11 @@ export const UnauthPlaylists = () => {
       </div>
       <div id="searchBar">
         <br />
-
+            
         <center>
+        <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
+              Create Playlists:<br></br>
+            </span>
           <input
             type="text"
             id="playlistInput"
@@ -182,7 +190,7 @@ export const UnauthPlaylists = () => {
 
           <button
             onClick={() => {
-              createPlaylist();
+              getOwner();
             }}
             className="btn3 btn-edit"
           >
