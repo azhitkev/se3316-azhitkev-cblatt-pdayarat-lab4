@@ -21,14 +21,7 @@ function App() {
         <Route path="/register" element={<RegistrationForm />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/logged-out" element={<Logout />}></Route>
-        <Route
-          path="/"
-          element={
-            <RouteGuard>
-              <UnauthSearch />
-            </RouteGuard>
-          }
-        ></Route>
+        <Route path="/" element={<UnauthSearch />}></Route>
         <Route path="/unauth-playlists" element={<UnauthPlaylists />}></Route>
         <Route
           path="api/authenticated/personal/playlistview"
