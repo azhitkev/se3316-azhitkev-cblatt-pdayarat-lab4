@@ -33,15 +33,6 @@ export const UnauthPlaylists = () => {
                 infoBtn.addEventListener('click', () => {playlistInfo(data[i].playlist_name, data[i].owner)});
                 playlists.appendChild(infoBtn);
 
-                
-
-                infoBtn.addEventListener('click', () => {openPlaylist(data[i].playlist_name)});
-                
-
-                //infoBtn.addEventListener('click', () => )
-                
-                
-
                 playlists.appendChild(document.createElement('br'));
                 playlists.appendChild(document.createElement('br'));
 
@@ -49,13 +40,7 @@ export const UnauthPlaylists = () => {
                 if(numPlaylists == 10){
                     break;
                 }
-
-                
-
             }
-
-            
-
         }))
     };
 
@@ -64,7 +49,9 @@ export const UnauthPlaylists = () => {
     function openPlaylist(passed){
         //history('api/playlistview/'+passed)
 
-        window.open('http://localhost:3000/api/playlistview/' + passed, '_blank');
+        var link = document.createElement('a');
+        link.href = 'http://localhost:3000/api/playlistview/' + passed;
+        link.click();
     }
     
     function playlistInfo(playlistName, playlistOwner){
@@ -89,15 +76,19 @@ export const UnauthPlaylists = () => {
                 infoList.appendChild(document.createElement('br'));
 
                 var link = document.createElement('a');
-                link.href = 'http://localhost:3000/api/playlistview'
+                //link.href = 'http://localhost:3000/api/playlistview'
                 
                 var linkBtn = document.createElement('button');
                 linkBtn.style.height = '20px';
                 linkBtn.style.width = '100px';
                 linkBtn.innerHTML = 'Show Playlist';
-                linkBtn.addEventListener('click', () => {link.click()});
+                //linkBtn.addEventListener('click', () => {link.click()});
                 infoList.appendChild(linkBtn);
                 infoList.appendChild(document.createElement('br'));
+
+                linkBtn.addEventListener('click', () => {openPlaylist(playlistName)});
+
+                
 
 
                 var closeBtn = document.createElement('button');
@@ -145,7 +136,7 @@ export const UnauthPlaylists = () => {
                 </ol>
                 
             </div>
-            <PublicPlaylistView name = {plName}/>
+            
         </div>
 
         
