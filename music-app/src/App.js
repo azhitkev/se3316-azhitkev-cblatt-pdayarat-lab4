@@ -11,7 +11,7 @@ import { UnauthSearch } from "./components/UnauthSearch";
 import { UnauthPlaylists } from "./components/UnauthPlaylists";
 import PersonalAuthPlaylistView from "./components/personalAuthPlaylistView";
 import PublicPlaylistView from "./components/publicPlaylistView";
-import AuthPlaylistView from "./components/AuthPlaylistView";
+import AuthPlaylistView from "./components/authPlaylistView";
 
 function App() {
   //check jwt token
@@ -29,7 +29,7 @@ function App() {
         <Route path="/unauth-search" element={<UnauthSearch />}></Route>
         <Route path="/unauth-playlists" element={<UnauthPlaylists />}></Route>
         <Route path="api/authenticated/personal/playlistview"element={<PersonalAuthPlaylistView />}></Route>
-        <Route path="api/playlistview" element={<PublicPlaylistView />}></Route>
+        <Route path="api/playlistview/:id" element={<PublicPlaylistView />}></Route>
         <Route path="api/authenticated/playlistview" element={<AuthPlaylistView />}></Route>
         <Route
           path="/dashboard"

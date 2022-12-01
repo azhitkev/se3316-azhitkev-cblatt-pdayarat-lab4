@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 
 //Varibale to hold name of displaying playlist
-var name = "Rap";
+var name = "Indie";
 var user = "Tisal";
 
 //Main component of page

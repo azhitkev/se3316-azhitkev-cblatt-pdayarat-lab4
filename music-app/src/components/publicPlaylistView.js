@@ -1,18 +1,26 @@
 //Needed Inports:
 import { stripBasename } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { UnauthPlaylists } from "./UnauthPlaylists";
+import { Navigate } from "react-router-dom";
+
 
 
 
 
 //Main component of page
-const PublicPlaylistView = ({someText}) => {
+const PublicPlaylistView = () => {
 
-  
+  const params = useParams();
+ 
 
   //Varibale to hold name of displaying playlist
-  var name = someText;
+
+
+
+  
+  var name = params.id;
 
   const [playlists, setplaylists] = useState([]);
 
