@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
@@ -58,6 +58,9 @@ export default function AdminPage() {
     <div>
       {" "}
       <h2>Admin Panel</h2>
+      <Link to="/dashboard" style={{ marginLeft: "20px" }}>
+        Dashboard
+      </Link>
       <div className="user-list">
         <table id="t1">
           <tbody>

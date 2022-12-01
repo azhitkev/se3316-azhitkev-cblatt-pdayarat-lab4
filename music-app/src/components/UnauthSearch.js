@@ -1,7 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { auth } from "../firebase-config";
+import { signOut } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
-export const UnauthSearch = () => {
+export const UnauthSearch = ({ role }) => {
+  const navigate = useNavigate();
+
   function clearList() {
     while (document.getElementById("searchList").firstChild) {
       document
@@ -122,20 +127,41 @@ export const UnauthSearch = () => {
     );
   }
 
+  const logout = async () => {
+    await signOut(auth);
+    navigate("/logged-out");
+    console.log("logged out");
+  };
+
   return (
     <div id="unauthSearch">
       <div>
         <div>
           <br />
-          <Link to="/login" style={{ marginLeft: "20px" }}>
-            Login
-          </Link>
-          <Link to="/register" style={{ marginLeft: "20px" }}>
-            Register
+          {auth.currentUser === null && (
+            <Link to="/login" style={{ marginLeft: "20px" }}>
+              Login
+            </Link>
+          )}
+          {auth.currentUser === null && (
+            <Link to="/register" style={{ marginLeft: "20px" }}>
+              Register
+            </Link>
+          )}
+          <Link to="/logout" style={{ marginLeft: "20px" }} onClick={logout}>
+            Logout
           </Link>
           <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
             Playlists
           </Link>
+          <Link to="/policies" style={{ marginLeft: "20px" }}>
+            Policies
+          </Link>
+          {role === "admin" && (
+            <Link to="/admin-panel" style={{ marginLeft: "20px" }}>
+              Admin Panel
+            </Link>
+          )}
         </div>
         <center>
           <span style={{ fontSize: "60px", fontFamily: "Impact" }}>

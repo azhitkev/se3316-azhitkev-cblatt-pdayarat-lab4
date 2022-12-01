@@ -3,6 +3,7 @@ import { auth } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Axios from "axios";
 import React, { useEffect, useState } from "react";
+import { UnauthSearch } from "./UnauthSearch";
 
 export const Dashboard = () => {
   const [role, setRole] = useState("");
@@ -19,25 +20,12 @@ export const Dashboard = () => {
     }
   }, []);
 
-  function navToAdmin() {
-    if (role === "admin") {
-      navigate("/admin-panel");
-    }
-  }
-
-  const logout = async () => {
-    await signOut(auth);
-    navigate("/logged-out");
-    console.log("logged out");
-  };
-
   return (
     <div>
       {" "}
       What it looks like when members are signed in
       <h1>Role: {role}</h1>
-      {role === "admin" && <button onClick={navToAdmin}>Admin panel</button>}
-      <button onClick={logout}>Log out</button>
+      <UnauthSearch role={role} />
     </div>
   );
 };

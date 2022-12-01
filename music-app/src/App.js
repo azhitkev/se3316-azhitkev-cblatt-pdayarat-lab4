@@ -15,23 +15,30 @@ import PublicPlaylistView from "./components/publicPlaylistView";
 import AuthPlaylistView from "./components/AuthPlaylistView";
 
 function App() {
-  //check jwt token
-  // const token = localStorage.getItem("token");
-  // if (token) {
-  //   setAuthToken(token);
-  // }
-
   return (
     <div className="wrapper">
       <Routes history={history}>
         <Route path="/register" element={<RegistrationForm />}></Route>
         <Route path="/login" element={<LoginPage />}></Route>
         <Route path="/logged-out" element={<Logout />}></Route>
-        <Route path="/unauth-search" element={<UnauthSearch />}></Route>
+        <Route
+          path="/"
+          element={
+            <RouteGuard>
+              <UnauthSearch />
+            </RouteGuard>
+          }
+        ></Route>
         <Route path="/unauth-playlists" element={<UnauthPlaylists />}></Route>
-        <Route path="api/authenticated/personal/playlistview"element={<PersonalAuthPlaylistView />}></Route>
+        <Route
+          path="api/authenticated/personal/playlistview"
+          element={<PersonalAuthPlaylistView />}
+        ></Route>
         <Route path="api/playlistview" element={<PublicPlaylistView />}></Route>
-        <Route path="api/authenticated/playlistview" element={<AuthPlaylistView />}></Route>
+        <Route
+          path="api/authenticated/playlistview"
+          element={<AuthPlaylistView />}
+        ></Route>
         <Route
           path="/dashboard"
           element={

@@ -94,7 +94,7 @@ export function LoginPage() {
           <h2>Please verify your account in order to log in.</h2>
         )}
         {user?.emailVerified && navigate("/dashboard")}
-        {user?.email === "admin@admin.com" && navigate("/admin-panel")}
+        {user?.email === "admin@admin.com" && navigate("/dashboard")}
         <button type="submit" onClick={login} class="btn">
           Login
         </button>
