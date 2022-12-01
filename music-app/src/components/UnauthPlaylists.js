@@ -46,9 +46,7 @@ export const UnauthPlaylists = () => {
           });
           playlists.appendChild(infoBtn);
 
-          infoBtn.addEventListener("click", () => {
-            openPlaylist(data[i].playlist_name);
-          });
+          
 
           //infoBtn.addEventListener('click', () => )
 
@@ -65,9 +63,9 @@ export const UnauthPlaylists = () => {
   }
 
   function openPlaylist(passed) {
-    //history('api/playlistview/'+passed)
-
-    window.open("http://localhost:3000/api/playlistview/" + passed, "_blank");
+    var link = document.createElement('a');
+    link.href = 'http://localhost:3000/api/authenticated/personal/playlistview/' + passed;
+    link.click();
   }
 
   function playlistInfo(playlistName, playlistOwner) {
@@ -97,15 +95,14 @@ export const UnauthPlaylists = () => {
           );
           infoList.appendChild(document.createElement("br"));
 
-          var link = document.createElement("a");
-          link.href = "http://localhost:3000/api/playlistview";
+          
 
           var linkBtn = document.createElement("button");
           linkBtn.style.height = "20px";
           linkBtn.style.width = "100px";
           linkBtn.innerHTML = "Show Playlist";
           linkBtn.addEventListener("click", () => {
-            link.click();
+            openPlaylist(playlistName);
           });
           infoList.appendChild(linkBtn);
           infoList.appendChild(document.createElement("br"));
