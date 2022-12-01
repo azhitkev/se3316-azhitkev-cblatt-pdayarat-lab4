@@ -11,7 +11,7 @@ import { UnauthSearch } from "./components/UnauthSearch";
 import { UnauthPlaylists } from "./components/UnauthPlaylists";
 import PersonalAuthPlaylistView from "./components/personalAuthPlaylistView";
 import PublicPlaylistView from "./components/publicPlaylistView";
-import AuthPlaylistView from "./components/AuthPlaylistView";
+import AuthPlaylistView from "./components/authPlaylistView";
 
 function App() {
   //check jwt token
