@@ -5,6 +5,7 @@ import { auth } from "../firebase-config";
 
 export const UnauthPlaylists = () => {
     let email = auth.currentUser.email;
+    
 
 
   function clearInfoList() {
@@ -59,11 +60,21 @@ export const UnauthPlaylists = () => {
     );
   }
 
-  function openPlaylist(passed) {
-    var link = document.createElement('a');
-    link.href = 'http://localhost:3000/api/authenticated/personal/playlistview/' + passed;
-    link.click();
-  }
+  function openPlaylist(playlistNm, owner, userName) {
+    
+    if(owner !=userName){
+        var link = document.createElement('a');
+        link.href = 'http://localhost:3000/api/playlistview/' + playlistNm;
+        link.click();
+    }
+    else if(owner ==userName){
+        var link = document.createElement('a');
+        link.href = 'http://localhost:3000/api/authenticated/personal/playlistview/' + playlistNm;
+        link.click();
+    }
+    }
+    
+
 
   function playlistInfo(playlistName, playlistOwner) {
     fetch("/api/playlists/info/" + playlistName).then((res) =>
@@ -99,7 +110,7 @@ export const UnauthPlaylists = () => {
           linkBtn.style.width = "100px";
           linkBtn.innerHTML = "Show Playlist";
           linkBtn.addEventListener("click", () => {
-            openPlaylist(playlistName);
+            getUsername(playlistName, playlistOwner);
           });
           infoList.appendChild(linkBtn);
           infoList.appendChild(document.createElement("br"));
@@ -115,7 +126,7 @@ export const UnauthPlaylists = () => {
     );
   }
 //Creates playlist for the logged in user
-  function getOwner(){
+  function getInfoPlaylist(){
     fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
     res.json().then((data) => {
         createPlaylist(data[0].username)
@@ -128,7 +139,14 @@ export const UnauthPlaylists = () => {
       method: "POST",
     });
     publicPlaylists();
-    
+  }
+  //Get username of current logged in user
+  function getUsername(pName, owner){
+    fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
+    res.json().then((data) => {
+        openPlaylist(pName,owner,data[0].username)
+    }))
+
   }
 
   return (
@@ -191,7 +209,7 @@ export const UnauthPlaylists = () => {
 
           <button
             onClick={() => {
-              getOwner();
+              getInfoPlaylist();
             }}
             className="btn3 btn-edit"
             style={{marginBottom: '30px'}}
