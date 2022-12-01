@@ -5,17 +5,6 @@ import PublicPlaylistView from "./publicPlaylistView";
 
 export const UnauthPlaylists = () => {
 
-    var plName = '';
-
-    function changePlName(newName){
-        plName = newName;
-        
-    }
-
-    
-    
-
-    
 
     function clearInfoList(){
         while(document.getElementById('infoList').firstChild){
@@ -46,7 +35,7 @@ export const UnauthPlaylists = () => {
 
                 
 
-                infoBtn.addEventListener('click', () => {changePlName(data[i].playlist_name)});
+                infoBtn.addEventListener('click', () => {openPlaylist(data[i].playlist_name)});
                 
 
                 //infoBtn.addEventListener('click', () => )
@@ -69,6 +58,14 @@ export const UnauthPlaylists = () => {
 
         }))
     };
+
+
+
+    function openPlaylist(passed){
+        //history('api/playlistview/'+passed)
+
+        window.open('http://localhost:3000/api/playlistview/' + passed, '_blank');
+    }
     
     function playlistInfo(playlistName, playlistOwner){
         fetch('/api/playlists/info/' + playlistName)
@@ -111,24 +108,11 @@ export const UnauthPlaylists = () => {
                 infoList.appendChild(closeBtn);   
 
             }
-
-
-
-
-
-
-
-            
-
-            
+        
         }))
     }
 
-    
 
-    
-
-    
     
 
     
@@ -161,7 +145,7 @@ export const UnauthPlaylists = () => {
                 </ol>
                 
             </div>
-            <PublicPlaylistView someText = {plName}/>
+            <PublicPlaylistView name = {plName}/>
         </div>
 
         
