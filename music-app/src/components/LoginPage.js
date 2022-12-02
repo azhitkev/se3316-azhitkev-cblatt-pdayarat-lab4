@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { onAuthStateChanged, signOut } from "firebase/auth";
+import {
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+  signOut,
+} from "firebase/auth";
 import { auth } from "../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
@@ -20,6 +24,16 @@ export function LoginPage() {
     );
     userRole = await userRole.json();
     console.log("THE USER ROLE IS:" + userRole);
+  };
+
+  const sendPasswordReset = async () => {
+    try {
+      await sendPasswordResetEmail(auth, emailLogin);
+      alert("Password reset link sent!");
+    } catch (err) {
+      console.log(err);
+      alert(err.message);
+    }
   };
 
   useEffect(() => {
@@ -115,6 +129,9 @@ export function LoginPage() {
         </button>
         <button type="submit" onClick={logout} class="btn">
           Log Out
+        </button>
+        <button onClick={() => sendPasswordReset(emailLogin)}>
+          Change password
         </button>
       </div>
     </div>
