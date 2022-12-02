@@ -1,7 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { auth } from "../firebase-config";
+import Axios from "axios";
 import { Link } from "react-router-dom";
 
+
 export const PolicyAUP = () => {
+
+    const [role, setRole] = useState("");
+
+
+    useEffect(() => {
+      if (auth.currentUser !== null) {
+        Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
+          (response) => {
+            setRole(response.data[0].role);
+          }
+        );
+      }
+    }, []);
 
     // function to write the policy
     function writePolicy(){
@@ -16,14 +32,21 @@ export const PolicyAUP = () => {
     }
 
     
-    window.onload = function showPolicy(){
+    function showPolicy(){
         
         var policy = document.getElementById('policy');
 
         var storedPolicy = localStorage.getItem('aupPolicy');
 
         policy.innerHTML = storedPolicy;
+
         
+    }
+
+    function reloadPage(){
+      var link = document.createElement('a');
+      link.href = 'localhost:3000/aup-policy';
+      link.click();
     }
     
     
@@ -56,6 +79,13 @@ export const PolicyAUP = () => {
         </center>
       </div>
       <center>
+      <div>
+        <br />
+        <input type="button" value="Show Policy" onClick={() => showPolicy()}></input>
+      </div>
+      </center>
+      <center>
+        {role === "admin" &&
         <div id="editDiv" style={{marginTop: '200px'}}>
             Create New Policy:
             <br />
@@ -64,7 +94,7 @@ export const PolicyAUP = () => {
             <br />
             <br />
             <input type="button" id="saveBtn" value="Save" onClick={() => writePolicy()}></input>
-        </div>
+        </div>}
       </center>
     </body>
       );

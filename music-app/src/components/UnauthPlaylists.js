@@ -108,12 +108,14 @@ export const UnauthPlaylists = () => {
           );
           infoList.appendChild(document.createElement("br"));
 
-          infoList.appendChild(
-            document.createTextNode(
-              "Total Duration: " + data[i].duration + " Minutes"
-            )
-          );
-          infoList.appendChild(document.createElement("br"));
+          if(data[i].duration === null){
+            infoList.appendChild(document.createTextNode('Total Duration: 0 Minutes'));
+            infoList.appendChild(document.createElement("br"));
+          }
+          else{
+            infoList.appendChild(document.createTextNode('Total Duration: ' + data[i].duration + ' Minutes'));
+            infoList.appendChild(document.createElement("br"));
+          }
 
           var linkBtn = document.createElement("button");
           linkBtn.style.height = "20px";
@@ -200,14 +202,19 @@ export const UnauthPlaylists = () => {
           link.href =
             "api/authenticated/personal/playlistview/" + data[i].playlist_name;
 
+          var getInfoBtn = document.createElement('button');
+          getInfoBtn.innerHTML = 'Get Info';
+          getInfoBtn.addEventListener('click', () => {playlistInfo(data[i].playlist_name, data[i].owner)});
+          myPlaylists.appendChild(getInfoBtn);
+          myPlaylists.appendChild(document.createTextNode('\xa0\xa0\xa0'));
+
           linkBtn.addEventListener("click", () => {
             openPlaylist(data[i].playlist_name, currentUser, currentUser);
           });
           myPlaylists.appendChild(linkBtn);
           myPlaylists.appendChild(document.createElement("br"));
-
-          myPlaylists.appendChild(document.createElement("br"));
-          myPlaylists.appendChild(document.createElement("br"));
+          
+          
         }
       })
     );

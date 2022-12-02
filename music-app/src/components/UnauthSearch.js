@@ -151,16 +151,17 @@ export const UnauthSearch = ({ role }) => {
           <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
             Playlists
           </Link>
-          <Link to="/policies" style={{ marginLeft: "20px" }}>
-            Policies
-          </Link>
           {role === "admin" && (
             <Link to="/admin-panel" style={{ marginLeft: "20px" }}>
               Admin Panel
             </Link>
           )}
+          <Link to="/aup-policy" style={{marginRight: "20px", float: 'right'}}>Acceptable Use Policy</Link>
+          <Link to="/dcma-notice" style={{marginRight: "20px", float: 'right'}}>DCMA Notice & Takedown Policy</Link>
+          <Link to="/security-and-privacy" style={{marginRight: "20px", float: 'right'}}>Security & Privacy Policy</Link>
         </div>
         <center>
+          <br />
           <span style={{ fontSize: "60px", fontFamily: "Impact" }}>
             MUSIC TOWN
           </span>
