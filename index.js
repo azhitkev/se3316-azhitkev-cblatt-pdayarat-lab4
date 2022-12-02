@@ -567,7 +567,7 @@ app.delete("/api/authenticated/playlists/delete/:pname", (req, res) => {
 app.post("/api/authenticated/playlist/comments/:pname/:user/:cmnt/:rating", (req, res) => {
   let date = new Date().toISOString().slice(0, 19).replace('T', ' ');
   date = date.toString();
-  let sql = `INSERT INTO playlist_comments VALUES ("${req.params.pname}","${req.params.user}","${req.params.cmnt}","${date}",${req.params.rating})`;
+  let sql = `INSERT INTO playlist_comments (playlist_name, user, comment, time_stamp, rating) VALUES ("${req.params.pname}","${req.params.user}","${req.params.cmnt}","${date}",${req.params.rating})`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -583,6 +583,27 @@ app.get("/api/playlist/comments/:pname", (req, res) => {
     console.log(result);
     res.send(result);
   });
+});
+
+//Get average rating for a playlist
+app.get("/api/playlist/rating/average/:pname", (req, res) => {
+  let avg = 0;
+  let sql1 = `SELECT AVG(rating) AS avg FROM playlist_comments WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql1, (err, result) => {
+    if (err) throw err;
+    avg = result[0].avg;
+    if(avg==null){
+      avg = 0;
+    }
+  
+  let sql2 = `UPDATE playlist_data SET avg_rating = "${avg}" WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql2, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+
+});
 });
 
 

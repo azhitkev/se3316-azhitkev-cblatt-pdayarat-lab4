@@ -36,6 +36,15 @@ const PlaylistView = () => {
     result = await result.json();
     setplaylists(result);
   };
+      //Creates rating for playlist
+      function setAvgRating() {
+        fetch(`/api/playlist/rating/average/${name.toLowerCase()}`).then((res) =>
+          res.json().then((data) => {
+            ;
+          })
+        );
+
+      }
 
   //Method to delete tracks in playlist
   const deleteTrack = async (id) => {
@@ -50,7 +59,7 @@ const PlaylistView = () => {
     );
     result = await result.json();
     if (result) {
-      getPlaylists();
+      
     }
   };
 
@@ -66,6 +75,7 @@ const PlaylistView = () => {
       result[0].status = "Public";
     }
     setinfo(result);
+    
   };
 
   //Change status of playlsit to either public or private
@@ -343,7 +353,7 @@ const PlaylistView = () => {
             >
               Switch
             </button>
-            <br></br> Rating: {item.rating}
+            <br></br> Rating: {item.avg_rating}
             <br></br> Edited: {item.last_edited}
           </p>
         ))}
@@ -431,6 +441,7 @@ const PlaylistView = () => {
             onClick={function (event) {
               handleClick();
               handleClick2();
+              setAvgRating();
             }}
             className="btn1 btn-edit"
           >

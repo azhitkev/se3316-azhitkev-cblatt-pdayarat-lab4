@@ -36,23 +36,16 @@ const AuthPlaylistView = () => {
     result = await result.json();
     setplaylists(result);
   };
-
-  //Method to delete tracks in playlist
-  const deleteTrack = async (id) => {
-    console.warn(id);
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlists/deletetrack/${name.toLowerCase()}/${parseInt(
-        id
-      )}`,
-      {
-        method: "Delete",
+      //Creates rating for playlist
+      function setAvgRating() {
+        fetch(`/api/playlist/rating/average/${name.toLowerCase()}`).then((res) =>
+          res.json().then((data) => {
+            ;
+          })
+        );
       }
-    );
-    result = await result.json();
-    if (result) {
-      getPlaylists();
-    }
-  };
+
+
 
   ///Checks playlist information and also sets status
   const playlistInfo = async () => {
@@ -66,6 +59,7 @@ const AuthPlaylistView = () => {
       result[0].status = "Public";
     }
     setinfo(result);
+    
   };
 
   //Change status of playlsit to either public or private
@@ -125,16 +119,6 @@ const AuthPlaylistView = () => {
     setUpdate(rating);
   };
 
-  //Changes Descripton to what user wants
-  const updateDescription = async (id) => {
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${id}}`,
-      {
-        method: "Post",
-      }
-    );
-    result = await result.json();
-  };
 
   //Shows information for each individual track
   function trackInfo(trackId) {
@@ -227,7 +211,7 @@ const AuthPlaylistView = () => {
             <br></br> Owner: {item.owner}
             <br></br>
             Status: {item.status}
-            <br></br> Rating: {item.rating}
+            <br></br> Rating: {item.avg_rating}
             <br></br> Edited: {item.last_edited}
           </p>
         ))}
@@ -298,6 +282,7 @@ const AuthPlaylistView = () => {
             onClick={function (event) {
               handleClick();
               handleClick2();
+              setAvgRating();
             }}
             className="btn1 btn-edit"
           >

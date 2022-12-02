@@ -3,15 +3,17 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigate, Link } from "react-router-dom";
+import { Axios } from "axios";
 
 export function LoginPage() {
   const [user, setUser] = useState({});
+  const [role, setRole] = useState("");
   const [emailLogin, setEmailLogin] = useState(null);
   const [passwordLogin, setPasswordLogin] = useState(null);
   const navigate = useNavigate();
   let userRole;
 
-  //checks the role of the user upon login (to see whether they should have admin priviledges or regular user priviledges)
+  // //checks the role of the user upon login (to see whether they should have admin priviledges or regular user priviledges)
   const checkUserRole = async () => {
     userRole = await fetch(
       `http://localhost:4000/userInfo/${auth.currentUser.email}`
@@ -24,6 +26,14 @@ export function LoginPage() {
     onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
+    if (auth.currentUser !== null) {
+      Axios.get(
+        `http://localhost:4000/roleAndUsername/${auth.currentUser.email}`
+      ).then((response) => {
+        setRole(response.data[0].role);
+        // setUser(response.data[0].userName);
+      });
+    }
   }, []);
 
   const handleInputChange = (e) => {
@@ -45,8 +55,6 @@ export function LoginPage() {
         emailLogin,
         passwordLogin
       );
-      checkUserRole();
-      console.log(user);
     } catch (error) {
       let message = error.message;
       console.log(message);

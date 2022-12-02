@@ -60,6 +60,7 @@ const PublicPlaylistView = () => {
       result[0].status = "Public";
     }
     setinfo(result);
+
   };
 
   //shows coments on playlist
@@ -167,7 +168,7 @@ const PublicPlaylistView = () => {
             <br></br> Owner: {item.owner}
             <br></br>
             Status: {item.status}
-            <br></br> Rating: {item.rating}
+            <br></br> Rating: {item.avg_rating}
             <br></br> Edited: {item.last_edited}
           </p>
         ))}
