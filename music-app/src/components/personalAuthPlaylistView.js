@@ -220,7 +220,15 @@ const PlaylistView = () => {
       }
     );
     result = await result.json();
+
   };
+
+  // routes back to dashboard
+  function routeToDash(){
+    var link = document.createElement('a');
+    link.href = 'http://localhost:3000/dashboard';
+    link.click();
+  }
 
   // search for tracks
   function searchTracks() {
@@ -345,9 +353,7 @@ const PlaylistView = () => {
               <th>Play Time</th>
               <th>Info</th>
               <th>
-                <button onClick={() => deletePlaylist()}>
-                  Delete playlist
-                </button>
+                <button onClick={() => {routeToDash(); deletePlaylist();}}>Delete playlist</button>
               </th>
             </tr>
 
