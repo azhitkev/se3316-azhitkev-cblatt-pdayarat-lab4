@@ -16,7 +16,7 @@ export const Dashboard = () => {
       Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
         (response) => {
           setRole(response.data[0].role);
-          setUser(response.data[0].userName);
+          setUser(response.data[0].username);
         }
       );
     }
@@ -25,8 +25,9 @@ export const Dashboard = () => {
   return (
     <div>
       {" "}
-      What it looks like when members are signed in
-      <h1>Role: {role}</h1>
+      
+      <h1 style={{ marginLeft :"20px"}}>Role: {role}</h1>
+      <h3 style={{ marginLeft :"20px"}}>User: {userName}</h3>
       <UnauthSearch role={role} userName={userName} />
     </div>
   );

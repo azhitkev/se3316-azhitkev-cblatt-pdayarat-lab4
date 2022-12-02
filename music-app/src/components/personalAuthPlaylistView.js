@@ -294,6 +294,7 @@ const PlaylistView = () => {
   //Html for page
   return (
     <React.Fragment>
+      <br/>
       <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
         Playlists
       </Link>
