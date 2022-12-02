@@ -211,9 +211,12 @@ export const UnauthPlaylists = () => {
         <div>
           <div>
             <br />
-            <Link to="/dashboard" style={{ marginLeft: "20px" }}>
-              Dashboard
-            </Link>
+            {auth.currentUser !== "active-user" &&
+              auth.currentUser !== "admin" && (
+                <Link to="/dashboard" style={{ marginLeft: "20px" }}>
+                  Home
+                </Link>
+              )}
           </div>
           <center>
             <span style={{ fontSize: "60px", fontFamily: "Impact" }}>
