@@ -595,6 +595,7 @@ app.get("/api/playlist/rating/average/:pname", (req, res) => {
     if(avg==null){
       avg = 0;
     }
+    
   
   let sql2 = `UPDATE playlist_data SET avg_rating = "${avg}" WHERE playlist_name = '${req.params.pname}'`;
   db.query(sql2, (err, result) => {
