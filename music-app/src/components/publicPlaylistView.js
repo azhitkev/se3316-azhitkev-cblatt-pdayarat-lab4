@@ -4,15 +4,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UnauthPlaylists } from "./UnauthPlaylists";
 import { Navigate } from "react-router-dom";
-
-
-
-
+import Axios from "axios";
+import { auth } from "../firebase-config";
 
 //Main component of page
 const PublicPlaylistView = () => {
-
-
+  const [role, setUserRole] = useState("");
   //Varibale to hold name of displaying playlist
   const params = useParams();
   var name = params.id;
@@ -25,6 +22,13 @@ const PublicPlaylistView = () => {
   //List of tracks
   useEffect(() => {
     getPlaylists();
+    if (auth.currentUser !== null) {
+      Axios.get(`http://localhost:4000/role/${auth.currentUser.email}`).then(
+        (response) => {
+          setUserRole(response.data[0].role);
+        }
+      );
+    }
   }, []);
   //Info about playlists
   useEffect(() => {
@@ -44,7 +48,6 @@ const PublicPlaylistView = () => {
     setplaylists(result);
   };
 
-
   ///Checks playlist information and also sets status
   const playlistInfo = async () => {
     let result = await fetch(
@@ -59,7 +62,6 @@ const PublicPlaylistView = () => {
     setinfo(result);
   };
 
-
   //shows coments on playlist
   const getComments = async () => {
     let result = await fetch(
@@ -69,58 +71,75 @@ const PublicPlaylistView = () => {
     setcmnts(result);
   };
 
-  function trackInfo(trackId){
-
-    fetch('/api/tracks/getInfo/' + trackId)
-    .then(res => res.json()
-    .then(data => {
-
-        var infoList = document.getElementById('infoList');
+  function trackInfo(trackId) {
+    fetch("/api/tracks/getInfo/" + trackId).then((res) =>
+      res.json().then((data) => {
+        var infoList = document.getElementById("infoList");
 
         //infoList.appendChild(document.createTextNode(data.track_title));
-        infoList.appendChild(document.createTextNode(data.track_title + ' by ' + data.artist_name));
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(
+          document.createTextNode(data.track_title + " by " + data.artist_name)
+        );
+        infoList.appendChild(document.createElement("br"));
 
-        infoList.appendChild(document.createTextNode('Album: ' + data.album_title));
-        infoList.appendChild(document.createElement('br'));
-        
+        infoList.appendChild(
+          document.createTextNode("Album: " + data.album_title)
+        );
+        infoList.appendChild(document.createElement("br"));
+
         /*
         NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
         infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
         infoList.appendChild(document.createElement('br'));
         */
 
-        infoList.appendChild(document.createTextNode('Play-Length: ' + data.track_duration));
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(
+          document.createTextNode("Play-Length: " + data.track_duration)
+        );
+        infoList.appendChild(document.createElement("br"));
 
-        infoList.appendChild(document.createTextNode('Date Created: ' + data.track_date_created));
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(
+          document.createTextNode("Date Created: " + data.track_date_created)
+        );
+        infoList.appendChild(document.createElement("br"));
 
-        var youtubeBtn = document.createElement('button');
-        youtubeBtn.style.height = '20px';
-        youtubeBtn.style.width = '120px';
-        youtubeBtn.innerHTML = 'Play on Youtube';
-        youtubeBtn.addEventListener('click', () => {window.open(data.track_url, '_blank')});
-        
+        var youtubeBtn = document.createElement("button");
+        youtubeBtn.style.height = "20px";
+        youtubeBtn.style.width = "120px";
+        youtubeBtn.innerHTML = "Play on Youtube";
+        youtubeBtn.addEventListener("click", () => {
+          window.open(data.track_url, "_blank");
+        });
+
         infoList.appendChild(youtubeBtn);
-        infoList.appendChild(document.createElement('br'));
+        infoList.appendChild(document.createElement("br"));
 
-        var closeBtn = document.createElement('button');
-        closeBtn.style.height = '20px';
-        closeBtn.style.width = '80px';
-        closeBtn.innerHTML = 'Close';
-        closeBtn.addEventListener('click', clearInfoList);
-        
+        var closeBtn = document.createElement("button");
+        closeBtn.style.height = "20px";
+        closeBtn.style.width = "80px";
+        closeBtn.innerHTML = "Close";
+        closeBtn.addEventListener("click", clearInfoList);
+
         infoList.appendChild(closeBtn);
-
-    }))
-}
-     function clearInfoList(){
-        while(document.getElementById('infoList').firstChild){
-            document.getElementById('infoList').removeChild(document.getElementById('infoList').firstChild);
-        }
+      })
+    );
+  }
+  function clearInfoList() {
+    while (document.getElementById("infoList").firstChild) {
+      document
+        .getElementById("infoList")
+        .removeChild(document.getElementById("infoList").firstChild);
     }
+  }
 
+  function hide(id) {
+    let cmnt = document.querySelector(id);
+    if (cmnt.style.display === "none") {
+      cmnt.style.display = "block";
+    } else {
+      cmnt.style.display = "none";
+    }
+  }
 
   //Html for page
   return (
@@ -139,12 +158,10 @@ const PublicPlaylistView = () => {
         ))}
       </div>
       <center>
-            <div id="additionalInfo">
-                <ol id="infoList">
-                    
-                </ol>
-            </div>
-            </center>
+        <div id="additionalInfo">
+          <ol id="infoList"></ol>
+        </div>
+      </center>
 
       <div className="track-list">
         <table id="t1">
@@ -155,9 +172,7 @@ const PublicPlaylistView = () => {
               <th>Artist</th>
               <th>Album</th>
               <th>Play Time</th>
-              <th>
-                Info
-              </th>
+              <th>Info</th>
             </tr>
 
             {playlists.map((item) => (
@@ -184,12 +199,17 @@ const PublicPlaylistView = () => {
           <tbody>
             {cmnts.map((item) => (
               <tr>
-                <td>
+                <td className={item.id}>
                   {item.user}
                   <br></br> {item.time_stamp}{" "}
                 </td>
-                <td>{item.comment}</td>
-                <td>{item.rating}/10</td>
+                <td className={item.id}>{item.comment}</td>
+                <td className={item.id}>{item.rating}/10</td>
+                {(
+                  <td>
+                    <button>Hide/Show</button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -199,3 +219,5 @@ const PublicPlaylistView = () => {
   );
 };
 export default PublicPlaylistView;
+
+//role === "admin" &&
