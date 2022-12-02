@@ -237,7 +237,7 @@ export const UnauthPlaylists = () => {
             </span>
             <br />
             <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
-              Publicly accessible playlists created by other users
+              Publicly accessible playlists
             </span>
           </center>
         </div>
@@ -285,11 +285,11 @@ export const UnauthPlaylists = () => {
 
       {auth.currentUser !== null && role === "active-user" && (
         <div id="searchBar">
-          <br />
+          
 
           <center>
             <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
-              <br /> <br />
+              
               Create Playlists:<br></br>
             </span>
             <input
