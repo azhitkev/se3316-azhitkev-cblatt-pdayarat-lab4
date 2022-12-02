@@ -4,7 +4,7 @@ import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-export const UnauthSearch = ({ role }) => {
+export const UnauthSearch = ({ role}) => {
   const navigate = useNavigate();
 
   function clearList() {
@@ -65,11 +65,6 @@ export const UnauthSearch = ({ role }) => {
         //infoList.appendChild(document.createTextNode(data.track_title));
         infoList.appendChild(
           document.createTextNode(data.track_title + " by " + data.artist_name)
-        );
-        infoList.appendChild(document.createElement("br"));
-
-        infoList.appendChild(
-          document.createTextNode("Album: " + data.album_title)
         );
         infoList.appendChild(document.createElement("br"));
 

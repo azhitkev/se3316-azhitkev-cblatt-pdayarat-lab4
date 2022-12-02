@@ -438,6 +438,15 @@ app.get("/api/playlists/list-names", (req, res) => {
     res.send(result);
   });
 });
+//Shows list of your own playlist
+app.get("/api/playlists/list-names/:owner", (req, res) => {
+  let sql = `SELECT playlist_name, owner FROM playlist_data WHERE owner ='${req.params.owner}'`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send(result);
+  });
+});
 
 //Make playlist public
 app.get("/api/authenticated/playlist/status/public/:pname", (req, res) => {
@@ -586,7 +595,7 @@ app.post("/register", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  let sql = `INSERT INTO Users (username, email, role) VALUES ("${username}", "${email}", "active-user")`;
+  let sql = `INSERT INTO users (username, email, role) VALUES ("${username}", "${email}", "active-user")`;
 
   db.query(sql, (err, result) => {
     if (err) throw err;
@@ -597,7 +606,7 @@ app.post("/register", (req, res) => {
 app.get("/role/:email", (req, res) => {
   const email = req.params.email;
 
-  let sql = `SELECT role FROM Users WHERE email = "${email}"`;
+  let sql = `SELECT role FROM users WHERE email = "${email}"`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     res.send(result);
@@ -606,7 +615,7 @@ app.get("/role/:email", (req, res) => {
 
 //Get all users (usernames) and their current role as stored in the db
 app.get("/userInfo", (req, res) => {
-  let sql = `SELECT username, role FROM Users`;
+  let sql = `SELECT username, role FROM users`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -617,7 +626,7 @@ app.get("/userInfo", (req, res) => {
 //get a specific user's role as it is stored in the db
 app.get("/userInfo/:email", (req, res) => {
   const email = req.params.email;
-  let sql = `SELECT role FROM Users WHERE email = "${email}"`;
+  let sql = `SELECT role FROM users WHERE email = "${email}"`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -629,10 +638,20 @@ app.post("/admin/:userName/:roleValue", (req, res) => {
   const username = req.params.userName;
   const role = req.params.roleValue;
 
-  let sql = `UPDATE Users SET role = '${role}' WHERE username = '${username}'`;
+  let sql = `UPDATE users SET role = '${role}' WHERE username = '${username}'`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
+    res.send(result);
+  });
+});
+
+
+//Get users (usernames) and their current role as stored in the db
+app.get("/roleAndUsername/:email", (req, res) => {
+  let sql = `SELECT role, username FROM users WHERE email="${req.params.email}"`;
+  db.query(sql, (err, result) => {
+    if (err) throw err;
     res.send(result);
   });
 });
