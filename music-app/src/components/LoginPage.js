@@ -48,7 +48,10 @@ export function LoginPage() {
       checkUserRole();
       console.log(user);
     } catch (error) {
-      console.log(error.message);
+      let message = error.message;
+      console.log(message);
+      document.getElementById("error-message").innerText = error.message;
+      console.log("This is the error message", error.message);
     }
   };
 
@@ -88,6 +91,7 @@ export function LoginPage() {
           />
         </div>
       </div>
+      <div id="error-message"></div>
       <div class="footer">
         {/* this renders if the user did not verify their email */}
         {user?.email && !user?.emailVerified && (
