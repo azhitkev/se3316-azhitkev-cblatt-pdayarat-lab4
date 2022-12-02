@@ -517,7 +517,7 @@ app.post("/api/authenticated/playlist/addtrack/:pName/:tID", (req, res) => {
   //Updating last edited
   let date = new Date().toISOString().slice(0, 19).replace("T", " ");
   date = date.toString();
-  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`;
+  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pName}'`;
   db.query(sql2, (err, result) => {});
 });
 
@@ -530,6 +530,11 @@ app.delete(
       if (err) throw err;
       res.send(result);
     });
+      //Updating last edited
+  let date = new Date().toISOString().slice(0, 19).replace("T", " ");
+  date = date.toString();
+  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql2, (err, result) => {});
   }
 );
 
