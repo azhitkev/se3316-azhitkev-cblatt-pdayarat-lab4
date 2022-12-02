@@ -132,16 +132,40 @@ const AuthPlaylistView = () => {
         );
         infoList.appendChild(document.createElement("br"));
 
+        var youtubeBtn = document.createElement("button");
+        youtubeBtn.style.height = "20px";
+        youtubeBtn.style.width = "60px";
+        youtubeBtn.innerHTML = "Play";
+        youtubeBtn.addEventListener("click", () => {
+          window.open(data.track_url, "_blank");
+        });
+
+        infoList.appendChild(youtubeBtn);
+        infoList.appendChild(document.createElement("br"));
+
         infoList.appendChild(
           document.createTextNode("Album: " + data.album_title)
         );
         infoList.appendChild(document.createElement("br"));
 
-        /*
-        NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
-        infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
-        infoList.appendChild(document.createElement('br'));
-        */
+        var genresArr = data.track_genres;
+        genresArr = genresArr.replace(/'/g, '"');
+        genresArr = JSON.parse(genresArr);
+
+        var genreNamesArr = [];
+
+        for (let i = 0; i < genresArr.length; i++) {
+          genreNamesArr.push(genresArr[i].genre_title);
+        }
+
+        var genreNamesStr = genreNamesArr.join(", ");
+
+        infoList.appendChild(
+          document.createTextNode("Genre(s): " + genreNamesStr)
+        );
+        infoList.appendChild(document.createElement("br"));
+
+        
 
         infoList.appendChild(
           document.createTextNode("Play-Length: " + data.track_duration)
@@ -151,17 +175,6 @@ const AuthPlaylistView = () => {
         infoList.appendChild(
           document.createTextNode("Date Created: " + data.track_date_created)
         );
-        infoList.appendChild(document.createElement("br"));
-
-        var youtubeBtn = document.createElement("button");
-        youtubeBtn.style.height = "20px";
-        youtubeBtn.style.width = "120px";
-        youtubeBtn.innerHTML = "Play on Youtube";
-        youtubeBtn.addEventListener("click", () => {
-          window.open(data.track_url, "_blank");
-        });
-
-        infoList.appendChild(youtubeBtn);
         infoList.appendChild(document.createElement("br"));
 
         var closeBtn = document.createElement("button");
@@ -230,7 +243,7 @@ const AuthPlaylistView = () => {
                 <td>{item.PlayTime}</td>
                 <td>
                   <button
-                    onClick={() => trackInfo(item.TrackID)}
+                    onClick={() => {clearInfoList(); trackInfo(item.TrackID)}}
                     className="btn btn-delete"
                   >
                     Info
