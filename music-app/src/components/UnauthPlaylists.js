@@ -66,7 +66,11 @@ export const UnauthPlaylists = () => {
   }
 
   function openPlaylist(playlistNm, owner, userName, role) {
-    if (owner != userName) {
+    if (role == "admin") {
+      var link = document.createElement("a");
+      link.href = "http://localhost:3000/api/playlistview/" + playlistNm;
+      link.click();
+    } else if (owner != userName && role == "active-user") {
       var link = document.createElement("a");
       link.href =
         "http://localhost:3000/api/authenticated/playlistview/" + playlistNm;
@@ -76,6 +80,10 @@ export const UnauthPlaylists = () => {
       link.href =
         "http://localhost:3000/api/authenticated/personal/playlistview/" +
         playlistNm;
+      link.click();
+    } else {
+      var link = document.createElement("a");
+      link.href = "http://localhost:3000/api/playlistview/" + playlistNm;
       link.click();
     }
   }
@@ -145,13 +153,18 @@ export const UnauthPlaylists = () => {
   }
   //Get username of current logged in user
   function getUsername(pName, owner) {
-    fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
-      res.json().then((data) => {
-        // setRole(data[0].role);
-        console.log(setRole(data[0].role));
-        openPlaylist(pName, owner, data[0].username, data[0].role);
-      })
-    );
+    if (auth.currentUser !== null) {
+      fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
+        res.json().then((data) => {
+          // setRole(data[0].role);
+          console.log(setRole(data[0].role));
+          openPlaylist(pName, owner, data[0].username, data[0].role);
+        })
+      );
+    }
+    else{
+        openPlaylist(pName, owner, null, null);
+    }
   }
 
   // get current user's username

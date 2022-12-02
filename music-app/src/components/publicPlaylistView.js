@@ -3,9 +3,13 @@ import { stripBasename } from "@remix-run/router";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { UnauthPlaylists } from "./UnauthPlaylists";
+import { Navigate } from "react-router-dom";
+import Axios from "axios";
+import { auth } from "../firebase-config";
 
 //Main component of page
 const PublicPlaylistView = () => {
+  const [role, setUserRole] = useState("");
   //Varibale to hold name of displaying playlist
   const params = useParams();
   var name = params.id;
@@ -18,6 +22,13 @@ const PublicPlaylistView = () => {
   //List of tracks
   useEffect(() => {
     getPlaylists();
+    if (auth.currentUser !== null) {
+      Axios.get(`http://localhost:4000/role/${auth.currentUser.email}`).then(
+        (response) => {
+          setUserRole(response.data[0].role);
+        }
+      );
+    }
   }, []);
   //Info about playlists
   useEffect(() => {
@@ -121,6 +132,15 @@ const PublicPlaylistView = () => {
     }
   }
 
+  function hide(id) {
+    let cmnt = document.querySelector(id);
+    if (cmnt.style.display === "none") {
+      cmnt.style.display = "block";
+    } else {
+      cmnt.style.display = "none";
+    }
+  }
+
   //Html for page
   return (
     <React.Fragment>
@@ -179,12 +199,17 @@ const PublicPlaylistView = () => {
           <tbody>
             {cmnts.map((item) => (
               <tr>
-                <td>
+                <td className={item.id}>
                   {item.user}
                   <br></br> {item.time_stamp}{" "}
                 </td>
-                <td>{item.comment}</td>
-                <td>{item.rating}/10</td>
+                <td className={item.id}>{item.comment}</td>
+                <td className={item.id}>{item.rating}/10</td>
+                {
+                  <td>
+                    <button>Hide/Show</button>
+                  </td>
+                }
               </tr>
             ))}
           </tbody>
@@ -194,3 +219,5 @@ const PublicPlaylistView = () => {
   );
 };
 export default PublicPlaylistView;
+
+//role === "admin" &&
