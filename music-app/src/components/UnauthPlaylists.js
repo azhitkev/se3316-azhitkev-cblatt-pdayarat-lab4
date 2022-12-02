@@ -1,23 +1,22 @@
-import React , {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import PublicPlaylistView from "./publicPlaylistView";
 import { auth } from "../firebase-config";
 import Axios from "axios";
 
 export const UnauthPlaylists = () => {
-    
   const [role, setRole] = useState("");
   // const [userName, setUser] = useState("");
 
   useEffect(() => {
     // console.log("ayoooooo", auth.currentUser.email);
     if (auth.currentUser !== null) {
-      Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
-        (response) => {
-          setRole(response.data[0].role);
-          // setUser(response.data[0].userName);
-        }
-      );
+      Axios.get(
+        `http://localhost:4000/roleAndUsername/${auth.currentUser.email}`
+      ).then((response) => {
+        setRole(response.data[0].role);
+        // setUser(response.data[0].userName);
+      });
     }
   }, []);
 
@@ -57,8 +56,6 @@ export const UnauthPlaylists = () => {
           });
           playlists.appendChild(infoBtn);
 
-          
-
           //infoBtn.addEventListener('click', () => )
 
           playlists.appendChild(document.createElement("br"));
@@ -69,20 +66,27 @@ export const UnauthPlaylists = () => {
   }
 
   function openPlaylist(playlistNm, owner, userName, role) {
-    
-    if(owner !=userName){
-        var link = document.createElement('a');
-        link.href = 'http://localhost:3000/api/authenticated/playlistview/' + playlistNm;
-        link.click();
+    if (role == "admin") {
+      var link = document.createElement("a");
+      link.href = "http://localhost:3000/api/playlistview/" + playlistNm;
+      link.click();
+    } else if (owner != userName && role == "active-user") {
+      var link = document.createElement("a");
+      link.href =
+        "http://localhost:3000/api/authenticated/playlistview/" + playlistNm;
+      link.click();
+    } else if (owner == userName) {
+      var link = document.createElement("a");
+      link.href =
+        "http://localhost:3000/api/authenticated/personal/playlistview/" +
+        playlistNm;
+      link.click();
+    } else {
+      var link = document.createElement("a");
+      link.href = "http://localhost:3000/api/playlistview/" + playlistNm;
+      link.click();
     }
-    else if(owner ==userName){
-        var link = document.createElement('a');
-        link.href = 'http://localhost:3000/api/authenticated/personal/playlistview/' + playlistNm;
-        link.click();
-    }
-    }
-    
-
+  }
 
   function playlistInfo(playlistName, playlistOwner) {
     fetch("/api/playlists/info/" + playlistName).then((res) =>
@@ -111,8 +115,6 @@ export const UnauthPlaylists = () => {
           );
           infoList.appendChild(document.createElement("br"));
 
-          
-
           var linkBtn = document.createElement("button");
           linkBtn.style.height = "20px";
           linkBtn.style.width = "100px";
@@ -133,13 +135,13 @@ export const UnauthPlaylists = () => {
       })
     );
   }
-//Creates playlist for the logged in user
-  function getInfoPlaylist(){
+  //Creates playlist for the logged in user
+  function getInfoPlaylist() {
     fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
-    res.json().then((data) => {
-        createPlaylist(data[0].username)
-
-    }))
+      res.json().then((data) => {
+        createPlaylist(data[0].username);
+      })
+    );
   }
   function createPlaylist(name) {
     let new_pName = document.getElementById("playlistInput").value;
@@ -147,61 +149,68 @@ export const UnauthPlaylists = () => {
       method: "POST",
     });
     publicPlaylists();
-    getCurrentUser()
+    getCurrentUser();
   }
   //Get username of current logged in user
-  function getUsername(pName, owner){
-    fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
-    res.json().then((data) => {
-      // setRole(data[0].role);
-      console.log(setRole(data[0].role))
-      openPlaylist(pName,owner,data[0].username, data[0].role)
-    }))
-
+  function getUsername(pName, owner) {
+    if (auth.currentUser !== null) {
+      fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
+        res.json().then((data) => {
+          // setRole(data[0].role);
+          console.log(setRole(data[0].role));
+          openPlaylist(pName, owner, data[0].username, data[0].role);
+        })
+      );
+    }
+    else{
+        openPlaylist(pName, owner, null, null);
+    }
   }
 
   // get current user's username
-  function getCurrentUser(){
-    fetch('/roleAndUsername/' + auth.currentUser.email)
-    .then(res => res.json()
-    .then(data => {
-      getMyPlaylists(data[0].username)
-    }))
+  function getCurrentUser() {
+    fetch("/roleAndUsername/" + auth.currentUser.email).then((res) =>
+      res.json().then((data) => {
+        getMyPlaylists(data[0].username);
+      })
+    );
   }
 
   // get current user's playlists
   function getMyPlaylists(currentUser) {
-    fetch('/api/playlists/list-names/' + currentUser)
-    .then(res => res.json()
-    .then(data => {
-      var myPlaylists = document.getElementById('myPlaylists');
+    fetch("/api/playlists/list-names/" + currentUser).then((res) =>
+      res.json().then((data) => {
+        var myPlaylists = document.getElementById("myPlaylists");
 
-      while(myPlaylists.firstChild){
-        myPlaylists.removeChild(myPlaylists.firstChild);
-      }
+        while (myPlaylists.firstChild) {
+          myPlaylists.removeChild(myPlaylists.firstChild);
+        }
 
-      for(let i=0; i<data.length; i++){
-        myPlaylists.appendChild(document.createTextNode(data[i].playlist_name + ' by ' + data[i].owner + '\xa0\xa0\xa0'));
-        
+        for (let i = 0; i < data.length; i++) {
+          myPlaylists.appendChild(
+            document.createTextNode(
+              data[i].playlist_name + " by " + data[i].owner + "\xa0\xa0\xa0"
+            )
+          );
 
-        var linkBtn = document.createElement('button');
-        linkBtn.innerHTML = 'Edit Playlist';
+          var linkBtn = document.createElement("button");
+          linkBtn.innerHTML = "Edit Playlist";
 
-        var link = document.createElement('a');
-        link.href = 'api/authenticated/personal/playlistview/' + data[i].playlist_name;
+          var link = document.createElement("a");
+          link.href =
+            "api/authenticated/personal/playlistview/" + data[i].playlist_name;
 
-        linkBtn.addEventListener('click', () => {openPlaylist(data[i].playlist_name, currentUser, currentUser)});
-        myPlaylists.appendChild(linkBtn);
-        myPlaylists.appendChild(document.createElement('br'));
-        
+          linkBtn.addEventListener("click", () => {
+            openPlaylist(data[i].playlist_name, currentUser, currentUser);
+          });
+          myPlaylists.appendChild(linkBtn);
+          myPlaylists.appendChild(document.createElement("br"));
 
-        myPlaylists.appendChild(document.createElement('br'));
-        myPlaylists.appendChild(document.createElement('br'));
-      }
-
-      
-
-    }))
+          myPlaylists.appendChild(document.createElement("br"));
+          myPlaylists.appendChild(document.createElement("br"));
+        }
+      })
+    );
   }
 
   // get user email
@@ -213,7 +222,7 @@ export const UnauthPlaylists = () => {
     <body onLoad={publicPlaylists()}>
       <div id="unauthPlaylists">
         <div>
-          <div> 
+          <div>
             <br />
             <Link to="/dashboard" style={{ marginLeft: "20px" }}>
               Dashboard
@@ -253,10 +262,10 @@ export const UnauthPlaylists = () => {
         </div>
       </div>
 
-      {auth.currentUser !== null && role === 'active-user' &&
-      <center>
-      <div onLoad={getCurrentUser()}>
-      <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
+      {auth.currentUser !== null && role === "active-user" && (
+        <center>
+          <div onLoad={getCurrentUser()}>
+            <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
               My Playlists:<br></br>
             </span>
             <ol
@@ -265,40 +274,41 @@ export const UnauthPlaylists = () => {
                 paddingLeft: "0",
                 textAlign: "center",
                 display: "inline-block",
-              }}>
-
-              </ol>
-      </div>
-      </center>
-      }
-
-      {auth.currentUser !== null && role === 'active-user' &&
-      <div id="searchBar">
-        <br />
-            
-        <center>
-        <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
-              <br /> <br />Create Playlists:<br></br>
-            </span>
-          <input
-            type="text"
-            id="playlistInput"
-            size="25"
-            placeholder="Create Playlist"
-            style={{marginBottom: '30px'}}
-          ></input>
-
-          <button
-            onClick={() => {
-              getInfoPlaylist();
-            }}
-            className="btn3 btn-edit"
-            style={{marginBottom: '30px'}}
-          >
-            Create
-          </button>
+              }}
+            ></ol>
+          </div>
         </center>
-      </div>}
+      )}
+
+      {auth.currentUser !== null && role === "active-user" && (
+        <div id="searchBar">
+          <br />
+
+          <center>
+            <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
+              <br /> <br />
+              Create Playlists:<br></br>
+            </span>
+            <input
+              type="text"
+              id="playlistInput"
+              size="25"
+              placeholder="Create Playlist"
+              style={{ marginBottom: "30px" }}
+            ></input>
+
+            <button
+              onClick={() => {
+                getInfoPlaylist();
+              }}
+              className="btn3 btn-edit"
+              style={{ marginBottom: "30px" }}
+            >
+              Create
+            </button>
+          </center>
+        </div>
+      )}
     </body>
   );
 };
