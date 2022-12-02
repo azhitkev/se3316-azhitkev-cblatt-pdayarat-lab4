@@ -28,7 +28,7 @@ export const Dashboard = () => {
       
       <h1 style={{ marginLeft :"20px"}}>Role: {role}</h1>
       <h3 style={{ marginLeft :"20px"}}>User: {userName}</h3>
-      <UnauthSearch role={role} userName={userName} />
+      <UnauthSearch role={role} userName={userName} /> 
     </div>
   );
 };
