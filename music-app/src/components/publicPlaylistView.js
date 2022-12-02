@@ -9,7 +9,7 @@ import { auth } from "../firebase-config";
 
 //Main component of page
 const PublicPlaylistView = () => {
-  const [role, setUserRole] = useState("");
+  const [role, setRole] = useState("");
   //Varibale to hold name of displaying playlist
   const params = useParams();
   var name = params.id;
@@ -23,9 +23,9 @@ const PublicPlaylistView = () => {
   useEffect(() => {
     getPlaylists();
     if (auth.currentUser !== null) {
-      Axios.get(`http://localhost:4000/role/${auth.currentUser.email}`).then(
+      Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
         (response) => {
-          setUserRole(response.data[0].role);
+          setRole(response.data[0].role);
         }
       );
     }

@@ -241,6 +241,36 @@ const PlaylistView = () => {
     result = await result.json();
   };
 
+  function clearConfirmationList(){
+    var confirmationList = document.getElementById('confirmationList');
+    while(confirmationList.firstChild){
+      confirmationList.removeChild(confirmationList.firstChild);
+    }
+  }
+
+  function deleteConfirmation(){
+    var confirmationList = document.getElementById('confirmationList');
+
+    while(confirmationList.firstChild){
+      confirmationList.removeChild(confirmationList.firstChild);
+    }
+
+    confirmationList.appendChild(document.createTextNode('Are you sure you would like to delete the playlist'));
+    confirmationList.appendChild(document.createElement('br'));
+
+    var yesBtn = document.createElement('button');
+    yesBtn.innerHTML = 'Yes'
+    confirmationList.appendChild(yesBtn);
+    confirmationList.appendChild(document.createElement('br'));
+    yesBtn.addEventListener('click', deletePlaylist);
+    yesBtn.addEventListener('click', routeToDash);
+
+    var noBtn = document.createElement('button');
+    noBtn.innerHTML = 'No';
+    confirmationList.appendChild(noBtn);
+    noBtn.addEventListener('click', clearConfirmationList);
+  }
+
   // routes back to dashboard
   function routeToDash() {
     var link = document.createElement("a");
@@ -318,6 +348,11 @@ const PlaylistView = () => {
       <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
         Playlists
       </Link>
+      <div id="deleteConfirmation">
+        <ol id="confirmationList">
+
+        </ol>
+      </div>
       <div className="playlist-info">
         <h1>{name}</h1>
         {info.map((item) => (
@@ -375,8 +410,8 @@ const PlaylistView = () => {
               <th>
                 <button
                   onClick={() => {
-                    routeToDash();
-                    deletePlaylist();
+                    
+                    deleteConfirmation();
                   }}
                 >
                   Delete playlist
