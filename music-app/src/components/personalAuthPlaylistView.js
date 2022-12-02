@@ -36,7 +36,7 @@ const PlaylistView = () => {
     result = await result.json();
     setplaylists(result);
   };
-  
+
   //Creates rating for playlist
   function setAvgRating() {
     fetch(`/api/playlist/rating/average/${name.toLowerCase()}`).then((res) =>
@@ -58,6 +58,8 @@ const PlaylistView = () => {
     result = await result.json();
     if (result) {
     }
+    playlistInfo();
+    getPlaylists();
   };
 
   ///Checks playlist information and also sets status
@@ -306,6 +308,7 @@ const PlaylistView = () => {
         }
       })
       .catch();
+      playlistInfo();
   }
 
   //Html for page
