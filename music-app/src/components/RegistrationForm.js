@@ -35,7 +35,7 @@ export const RegistrationForm = () => {
       auth.signOut();
       console.log(user);
     } catch (error) {
-      console.log(error.message);
+      alert(error.message);
     }
   };
 

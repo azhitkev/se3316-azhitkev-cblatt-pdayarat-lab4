@@ -74,7 +74,7 @@ export default function AdminPage() {
                   <select value={dropDownValue} onChange={handleChange}>
                     <option value="default">default</option>
                     <option value="admin">admin</option>
-                    <option value="active">active-user</option>
+                    <option value="active-user">active-user</option>
                     <option value="deactivated">deactivated</option>
                   </select>
                 </td>

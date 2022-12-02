@@ -431,7 +431,7 @@ app.get("/api/authenticated/playlists/list-names", (req, res) => {
 });
 //Shows list of only public playlist
 app.get("/api/playlists/list-names", (req, res) => {
-  let sql = `SELECT playlist_name, owner FROM playlist_data WHERE status = FALSE`;
+  let sql = `SELECT playlist_name, owner, avg_rating FROM playlist_data WHERE status = FALSE`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -440,7 +440,7 @@ app.get("/api/playlists/list-names", (req, res) => {
 });
 //Shows list of your own playlist
 app.get("/api/playlists/list-names/:owner", (req, res) => {
-  let sql = `SELECT playlist_name, owner FROM playlist_data WHERE owner ='${req.params.owner}'`;
+  let sql = `SELECT playlist_name, owner, avg_rating FROM playlist_data WHERE owner ='${req.params.owner}'`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
