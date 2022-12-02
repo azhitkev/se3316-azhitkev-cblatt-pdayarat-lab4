@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import {
   createUserWithEmailAndPassword,
@@ -13,17 +13,13 @@ export const RegistrationForm = () => {
   const [passwordReg, setPassword] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState(null);
 
-  const register = async () => {
-    axios
-      .post("http://localhost:4000/register", {
-        username: usernameReg,
-        email: emailReg,
-        password: passwordReg,
-      })
-      .then((response) => {
-        console.log(response);
-      });
+  let userExists;
 
+  useEffect(() => {
+    userExistsCheck();
+  }, []);
+
+  const register = async () => {
     try {
       //add if passwordreg == confirmpassword
       const user = await createUserWithEmailAndPassword(
@@ -34,10 +30,29 @@ export const RegistrationForm = () => {
       await sendEmailVerification(auth.currentUser);
       auth.signOut();
       console.log(user);
+      userExists = false;
+      userExistsCheck();
     } catch (error) {
       console.log(error.message);
+      userExists = true;
     }
   };
+
+  async function userExistsCheck() {
+    console.log("in here");
+    if (userExists === false) {
+      console.log("not in here");
+      axios
+        .post("http://localhost:4000/register", {
+          username: usernameReg,
+          email: emailReg,
+          password: passwordReg,
+        })
+        .then((response) => {
+          console.log(response);
+        });
+    }
+  }
 
   const handleInputChange = (e) => {
     //you get the id and value entered in the input box
