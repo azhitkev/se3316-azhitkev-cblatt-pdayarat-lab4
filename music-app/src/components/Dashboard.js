@@ -44,6 +44,7 @@ export const Dashboard = () => {
   return (
     <div>
       {" "}
+
       {role === "deactivated" && (
         <h1>
           Your accounted status is: deactivated. Please contact Admin to fix
@@ -62,6 +63,7 @@ export const Dashboard = () => {
       {role !== "deactivated" && (
         <UnauthSearch role={role} userName={userName} />
       )}
+
     </div>
   );
 };

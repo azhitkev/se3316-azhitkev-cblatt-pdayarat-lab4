@@ -36,23 +36,16 @@ const AuthPlaylistView = () => {
     result = await result.json();
     setplaylists(result);
   };
-
-  //Method to delete tracks in playlist
-  const deleteTrack = async (id) => {
-    console.warn(id);
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlists/deletetrack/${name.toLowerCase()}/${parseInt(
-        id
-      )}`,
-      {
-        method: "Delete",
+      //Creates rating for playlist
+      function setAvgRating() {
+        fetch(`/api/playlist/rating/average/${name.toLowerCase()}`).then((res) =>
+          res.json().then((data) => {
+            ;
+          })
+        );
       }
-    );
-    result = await result.json();
-    if (result) {
-      getPlaylists();
-    }
-  };
+
+
 
   ///Checks playlist information and also sets status
   const playlistInfo = async () => {
@@ -66,6 +59,7 @@ const AuthPlaylistView = () => {
       result[0].status = "Public";
     }
     setinfo(result);
+    
   };
 
   //Change status of playlsit to either public or private
@@ -125,16 +119,6 @@ const AuthPlaylistView = () => {
     setUpdate(rating);
   };
 
-  //Changes Descripton to what user wants
-  const updateDescription = async (id) => {
-    let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/description/${name.toLowerCase()}/${id}}`,
-      {
-        method: "Post",
-      }
-    );
-    result = await result.json();
-  };
 
   //Shows information for each individual track
   function trackInfo(trackId) {
@@ -148,16 +132,40 @@ const AuthPlaylistView = () => {
         );
         infoList.appendChild(document.createElement("br"));
 
+        var youtubeBtn = document.createElement("button");
+        youtubeBtn.style.height = "20px";
+        youtubeBtn.style.width = "60px";
+        youtubeBtn.innerHTML = "Play";
+        youtubeBtn.addEventListener("click", () => {
+          window.open(data.track_url, "_blank");
+        });
+
+        infoList.appendChild(youtubeBtn);
+        infoList.appendChild(document.createElement("br"));
+
         infoList.appendChild(
           document.createTextNode("Album: " + data.album_title)
         );
         infoList.appendChild(document.createElement("br"));
 
-        /*
-        NEED TO FIGURE OUT HOW TO SHOW TRACK GENRES
-        infoList.appendChild(document.createTextNode('Genre(s): ' + data.track_genres));
-        infoList.appendChild(document.createElement('br'));
-        */
+        var genresArr = data.track_genres;
+        genresArr = genresArr.replace(/'/g, '"');
+        genresArr = JSON.parse(genresArr);
+
+        var genreNamesArr = [];
+
+        for (let i = 0; i < genresArr.length; i++) {
+          genreNamesArr.push(genresArr[i].genre_title);
+        }
+
+        var genreNamesStr = genreNamesArr.join(", ");
+
+        infoList.appendChild(
+          document.createTextNode("Genre(s): " + genreNamesStr)
+        );
+        infoList.appendChild(document.createElement("br"));
+
+        
 
         infoList.appendChild(
           document.createTextNode("Play-Length: " + data.track_duration)
@@ -167,17 +175,6 @@ const AuthPlaylistView = () => {
         infoList.appendChild(
           document.createTextNode("Date Created: " + data.track_date_created)
         );
-        infoList.appendChild(document.createElement("br"));
-
-        var youtubeBtn = document.createElement("button");
-        youtubeBtn.style.height = "20px";
-        youtubeBtn.style.width = "120px";
-        youtubeBtn.innerHTML = "Play on Youtube";
-        youtubeBtn.addEventListener("click", () => {
-          window.open(data.track_url, "_blank");
-        });
-
-        infoList.appendChild(youtubeBtn);
         infoList.appendChild(document.createElement("br"));
 
         var closeBtn = document.createElement("button");
@@ -214,7 +211,7 @@ const AuthPlaylistView = () => {
             <br></br> Owner: {item.owner}
             <br></br>
             Status: {item.status}
-            <br></br> Rating: {item.rating}
+            <br></br> Rating: {item.avg_rating}
             <br></br> Edited: {item.last_edited}
           </p>
         ))}
@@ -246,7 +243,7 @@ const AuthPlaylistView = () => {
                 <td>{item.PlayTime}</td>
                 <td>
                   <button
-                    onClick={() => trackInfo(item.TrackID)}
+                    onClick={() => {clearInfoList(); trackInfo(item.TrackID)}}
                     className="btn btn-delete"
                   >
                     Info
@@ -285,6 +282,7 @@ const AuthPlaylistView = () => {
             onClick={function (event) {
               handleClick();
               handleClick2();
+              setAvgRating();
             }}
             className="btn1 btn-edit"
           >
