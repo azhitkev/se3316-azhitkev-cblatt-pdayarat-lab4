@@ -1,6 +1,6 @@
 //Needed Inports:
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 //Varibale to hold name of displaying playlist
 
@@ -202,6 +202,9 @@ const AuthPlaylistView = () => {
   //Html for page
   return (
     <React.Fragment>
+      <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
+        Playlist
+      </Link>
       <div className="playlist-info">
         <h1>{name}</h1>
         {info.map((item) => (

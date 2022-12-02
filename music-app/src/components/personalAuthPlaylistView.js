@@ -1,13 +1,11 @@
 //Needed Inports:
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 
 //Varibale to hold name of displaying playlist
 
-
 //Main component of page
 const PlaylistView = () => {
-
   let user = "Tisal";
   const params = useParams();
   var name = params.id;
@@ -127,7 +125,7 @@ const PlaylistView = () => {
     setUpdate(rating);
   };
 
-//Seting description to new updated description
+  //Seting description to new updated description
 
   const [desciption, setdesciption] = useState("");
   const [newDesc, setnewDesc] = useState(desciption);
@@ -149,7 +147,6 @@ const PlaylistView = () => {
     );
     result = await result.json();
   };
-
 
   //Shows information for each individual track
   function trackInfo(trackId) {
@@ -214,74 +211,85 @@ const PlaylistView = () => {
     }
   }
 
-
   //Deletes playlist and routes you to home
   const deletePlaylist = async () => {
-    let result = await fetch(`/api/authenticated/playlists/delete/${name.toLowerCase()}`, {
-      method: "Delete",
-    });
+    let result = await fetch(
+      `/api/authenticated/playlists/delete/${name.toLowerCase()}`,
+      {
+        method: "Delete",
+      }
+    );
     result = await result.json();
   };
 
   // search for tracks
-  function searchTracks(){
-    var input = document.getElementById('textBox').value;
+  function searchTracks() {
+    var input = document.getElementById("textBox").value;
 
-    fetch('/api/tracks/' + input)
-    .then(res => res.json()
-    .then(data => {
+    fetch("/api/tracks/" + input).then((res) =>
+      res.json().then((data) => {
+        var searchList = document.getElementById("searchList");
 
-      var searchList = document.getElementById('searchList');
+        while (searchList.firstChild) {
+          searchList.removeChild(searchList.firstChild);
+        }
 
-      while(searchList.firstChild){
-        searchList.removeChild(searchList.firstChild);
-      }
+        searchList.appendChild(document.createElement("br"));
 
-      searchList.appendChild(document.createElement('br'));
+        for (let i = 0; i < data.length; i++) {
+          searchList.appendChild(
+            document.createTextNode(
+              data[i].item.track_title +
+                " by " +
+                data[i].item.artist_name +
+                "\xa0\xa0\xa0\xa0"
+            )
+          );
 
-      for(let i=0; i<data.length; i++){
-        searchList.appendChild(document.createTextNode(data[i].item.track_title + ' by ' + data[i].item.artist_name + '\xa0\xa0\xa0\xa0'));
+          var addBtn = document.createElement("button");
+          addBtn.style.height = "20px";
+          addBtn.style.width = "120px";
+          addBtn.innerHTML = "Add to Playlist";
+          searchList.appendChild(addBtn);
 
-        var addBtn = document.createElement('button');
-        addBtn.style.height = '20px';
-        addBtn.style.width = '120px';
-        addBtn.innerHTML = 'Add to Playlist';
-        searchList.appendChild(addBtn);
+          addBtn.addEventListener("click", () => {
+            addTracks(data[i].item.track_id);
+          });
 
-        addBtn.addEventListener('click', () => {addTracks(data[i].item.track_id)});
-
-        searchList.appendChild(document.createElement('br'));
-        searchList.appendChild(document.createElement('br'));
-      }
-    }))
+          searchList.appendChild(document.createElement("br"));
+          searchList.appendChild(document.createElement("br"));
+        }
+      })
+    );
   }
 
   // add tracks to a playlist
-  function addTracks(trackID){
-    fetch('/api/authenticated/playlist/addtrack/' + name + '/' + trackID, {
-      method: 'POST',
-      headers: {'Content-type': 'application/json'}
+  function addTracks(trackID) {
+    fetch("/api/authenticated/playlist/addtrack/" + name + "/" + trackID, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
     })
-    .then(res => {
-      if(res.ok){
-        res.json()
-        .then(data => {
-
-          getPlaylists();
-
-        })
-        .catch(err => alert('Failed to get JSON object'))
-      }
-      else{
-        alert('Error: ' + res.status)
-      }
-    })
-    .catch()
+      .then((res) => {
+        if (res.ok) {
+          res
+            .json()
+            .then((data) => {
+              getPlaylists();
+            })
+            .catch((err) => alert("Failed to get JSON object"));
+        } else {
+          alert("Error: " + res.status);
+        }
+      })
+      .catch();
   }
 
   //Html for page
   return (
     <React.Fragment>
+      <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
+        Playlists
+      </Link>
       <div className="playlist-info">
         <h1>{name}</h1>
         {info.map((item) => (
@@ -307,7 +315,7 @@ const PlaylistView = () => {
                 </button>
               </form>
             </div>
-             Owner: {item.owner}
+            Owner: {item.owner}
             <br></br>
             Status: {item.status}
             <button
@@ -326,7 +334,6 @@ const PlaylistView = () => {
           <ol id="infoList"></ol>
         </div>
       </center>
-
       <div className="track-list">
         <table id="t1">
           <tbody>
@@ -338,7 +345,9 @@ const PlaylistView = () => {
               <th>Play Time</th>
               <th>Info</th>
               <th>
-                <button onClick={() => deletePlaylist()}>Delete playlist</button>
+                <button onClick={() => deletePlaylist()}>
+                  Delete playlist
+                </button>
               </th>
             </tr>
 
@@ -426,20 +435,28 @@ const PlaylistView = () => {
       </div>
       <div id="trackSearch">
         <br />
-        <h5 style={{marginLeft: '80px'}}>Add Tracks</h5>
+        <h5 style={{ marginLeft: "80px" }}>Add Tracks</h5>
         <input
-        type="text"
-        id="textBox"
-        size="50"
-        placeholder="Enter track, artist, album, or genre"
-        style={{marginLeft: '80px'}}
+          type="text"
+          id="textBox"
+          size="50"
+          placeholder="Enter track, artist, album, or genre"
+          style={{ marginLeft: "80px" }}
         ></input>
-        <input type="button" id="searchButton" value="Search" onClick={() => {searchTracks();}}></input>
+        <input
+          type="button"
+          id="searchButton"
+          value="Search"
+          onClick={() => {
+            searchTracks();
+          }}
+        ></input>
       </div>
-      <div id="searchResults" style={{marginLeft: '80px', marginBottom: '505px'}}>
-        <ol id="searchList">
-
-        </ol>
+      <div
+        id="searchResults"
+        style={{ marginLeft: "80px", marginBottom: "505px" }}
+      >
+        <ol id="searchList"></ol>
       </div>
     </React.Fragment>
   );

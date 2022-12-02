@@ -21,6 +21,6 @@ export const RouteGuard = ({ children }) => {
   return userExistsAndEmailVerified() ? (
     <Dashboard {...children} />
   ) : (
-    <Navigate to="/login" />
+    <Navigate to="/" />
   );
 };
