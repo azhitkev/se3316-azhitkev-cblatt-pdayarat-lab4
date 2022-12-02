@@ -5,6 +5,7 @@ import {
   sendEmailVerification,
 } from "firebase/auth";
 import { auth } from "../firebase-config";
+import { Link } from "react-router-dom";
 
 export const RegistrationForm = () => {
   const [usernameReg, setUsername] = useState(null);
@@ -71,6 +72,9 @@ export const RegistrationForm = () => {
 
   return (
     <div className="form">
+      <Link to="/" style={{ marginLeft: "20px" }}>
+        Home
+      </Link>
       <h3>Registration</h3>
       <div className="form-body">
         <div className="username">
