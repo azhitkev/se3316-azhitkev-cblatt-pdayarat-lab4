@@ -25,11 +25,6 @@ export default function AdminPage() {
     getAllUsers();
   }, [navigate]);
 
-  const logout = async () => {
-    console.log(auth.currentUser);
-    await signOut(auth);
-    console.log("logged out");
-  };
 
   const getAllUsers = async () => {
     console.log(auth);
@@ -93,9 +88,6 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
-      <button type="submit" onClick={logout} class="btn">
-        Log Out
-      </button>
     </div>
   );
 }
