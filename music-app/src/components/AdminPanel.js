@@ -93,9 +93,6 @@ export default function AdminPage() {
           </tbody>
         </table>
       </div>
-      <button type="submit" onClick={logout} class="btn">
-        Log Out
-      </button>
     </div>
   );
 }
