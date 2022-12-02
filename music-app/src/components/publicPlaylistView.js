@@ -145,7 +145,8 @@ const PublicPlaylistView = () => {
   }
 
   function hide(id) {
-    let cmnt = document.querySelector(id);
+    
+    let cmnt = document.getElementById(id);
     if (cmnt.style.display === "none") {
       cmnt.style.display = "block";
     } else {
@@ -214,16 +215,16 @@ const PublicPlaylistView = () => {
         <table id="t2">
           <tbody>
             {cmnts.map((item) => (
-              <tr>
-                <td className={item.id}>
+              <tr id={item.id}>
+                <td>
                   {item.user}
                   <br></br> {item.time_stamp}{" "}
                 </td>
-                <td className={item.id}>{item.comment}</td>
-                <td className={item.id}>{item.rating}/10</td>
-                {
+                <td>{item.comment}</td>
+                <td>{item.rating}/10</td>
+                {role === "admin" &&
                   <td>
-                    <button>Hide/Show</button>
+                    <button onClick={() => hide(item.id)}>Hide</button>
                   </td>
                 }
               </tr>
@@ -236,4 +237,4 @@ const PublicPlaylistView = () => {
 };
 export default PublicPlaylistView;
 
-//role === "admin" &&
+
