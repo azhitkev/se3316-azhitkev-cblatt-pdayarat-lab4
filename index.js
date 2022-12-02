@@ -370,7 +370,6 @@ app.use((req, res, next) => {
 //_DATA BASE ________________________________________________________________________________________________________________________
 //Connecting to database
 const mysql = require("mysql");
-const { applyActionCode } = require("firebase/auth");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
