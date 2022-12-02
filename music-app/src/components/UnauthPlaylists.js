@@ -147,6 +147,7 @@ export const UnauthPlaylists = () => {
       method: "POST",
     });
     publicPlaylists();
+    getCurrentUser()
   }
   //Get username of current logged in user
   function getUsername(pName, owner){
