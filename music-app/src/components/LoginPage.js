@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export function LoginPage() {
   const [user, setUser] = useState({});
@@ -62,6 +62,9 @@ export function LoginPage() {
 
   return (
     <div className="form">
+      <Link to="/" style={{ marginLeft: "20px" }}>
+        Home
+      </Link>
       <h3>Login</h3>
       <div className="form-body">
         <div className="email">
