@@ -36,15 +36,13 @@ const PlaylistView = () => {
     result = await result.json();
     setplaylists(result);
   };
-      //Creates rating for playlist
-      function setAvgRating() {
-        fetch(`/api/playlist/rating/average/${name.toLowerCase()}`).then((res) =>
-          res.json().then((data) => {
-            ;
-          })
-        );
 
-      }
+  //Creates rating for playlist
+  function setAvgRating() {
+    fetch(`/api/playlist/rating/average/${name.toLowerCase()}`).then((res) =>
+      res.json().then((data) => {})
+    );
+  }
 
   //Method to delete tracks in playlist
   const deleteTrack = async (id) => {
@@ -59,8 +57,9 @@ const PlaylistView = () => {
     );
     result = await result.json();
     if (result) {
-      
     }
+    playlistInfo();
+    getPlaylists();
   };
 
   ///Checks playlist information and also sets status
@@ -75,7 +74,6 @@ const PlaylistView = () => {
       result[0].status = "Public";
     }
     setinfo(result);
-    
   };
 
   //Change status of playlsit to either public or private
@@ -310,12 +308,13 @@ const PlaylistView = () => {
         }
       })
       .catch();
+      playlistInfo();
   }
 
   //Html for page
   return (
     <React.Fragment>
-      <br/>
+      <br />
       <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
         Playlists
       </Link>
@@ -394,7 +393,10 @@ const PlaylistView = () => {
                 <td>{item.PlayTime}</td>
                 <td>
                   <button
-                    onClick={() => {clearInfoList(); trackInfo(item.TrackID)}}
+                    onClick={() => {
+                      clearInfoList();
+                      trackInfo(item.TrackID);
+                    }}
                     className="btn btn-delete"
                   >
                     Info
