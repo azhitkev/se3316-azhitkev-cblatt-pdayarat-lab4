@@ -144,6 +144,9 @@ const PublicPlaylistView = () => {
   //Html for page
   return (
     <React.Fragment>
+      <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
+        Playlists
+      </Link>
       <div className="playlist-info">
         <h1>{name}</h1>
         {info.map((item) => (

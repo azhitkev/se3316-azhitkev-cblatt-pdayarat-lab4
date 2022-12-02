@@ -4,7 +4,7 @@ import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 
-export const UnauthSearch = ({ role}) => {
+export const UnauthSearch = ({ role }) => {
   const navigate = useNavigate();
 
   function clearList() {
@@ -143,9 +143,11 @@ export const UnauthSearch = ({ role}) => {
               Register
             </Link>
           )}
-          <Link to="/logout" style={{ marginLeft: "20px" }} onClick={logout}>
-            Logout
-          </Link>
+          {auth.currentUser !== null && (
+            <Link to="/logout" style={{ marginLeft: "20px" }} onClick={logout}>
+              Logout
+            </Link>
+          )}
           <Link to="/unauth-playlists" style={{ marginLeft: "20px" }}>
             Playlists
           </Link>
