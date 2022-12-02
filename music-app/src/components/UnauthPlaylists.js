@@ -1,12 +1,25 @@
-import React from "react";
+import React , {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import PublicPlaylistView from "./publicPlaylistView";
 import { auth } from "../firebase-config";
+import Axios from "axios";
 
 export const UnauthPlaylists = () => {
-    let email = auth.currentUser.email;
     
+  const [role, setRole] = useState("");
+  // const [userName, setUser] = useState("");
 
+  useEffect(() => {
+    // console.log("ayoooooo", auth.currentUser.email);
+    if (auth.currentUser !== null) {
+      Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
+        (response) => {
+          setRole(response.data[0].role);
+          // setUser(response.data[0].userName);
+        }
+      );
+    }
+  }, []);
 
   function clearInfoList() {
     while (document.getElementById("infoList").firstChild) {
@@ -50,21 +63,16 @@ export const UnauthPlaylists = () => {
 
           playlists.appendChild(document.createElement("br"));
           playlists.appendChild(document.createElement("br"));
-
-          let numPlaylists = playlists.childNodes.length;
-          if (numPlaylists == 10) {
-            break;
-          }
         }
       })
     );
   }
 
-  function openPlaylist(playlistNm, owner, userName) {
+  function openPlaylist(playlistNm, owner, userName, role) {
     
     if(owner !=userName){
         var link = document.createElement('a');
-        link.href = 'http://localhost:3000/api/playlistview/' + playlistNm;
+        link.href = 'http://localhost:3000/api/authenticated/playlistview/' + playlistNm;
         link.click();
     }
     else if(owner ==userName){
@@ -144,16 +152,67 @@ export const UnauthPlaylists = () => {
   function getUsername(pName, owner){
     fetch(`/roleAndUsername/${auth.currentUser.email}`).then((res) =>
     res.json().then((data) => {
-        openPlaylist(pName,owner,data[0].username)
+      // setRole(data[0].role);
+      console.log(setRole(data[0].role))
+      openPlaylist(pName,owner,data[0].username, data[0].role)
     }))
 
   }
+
+  // get current user's username
+  function getCurrentUser(){
+    fetch('/roleAndUsername/' + auth.currentUser.email)
+    .then(res => res.json()
+    .then(data => {
+      getMyPlaylists(data[0].username)
+    }))
+  }
+
+  // get current user's playlists
+  function getMyPlaylists(currentUser) {
+    fetch('/api/playlists/list-names/' + currentUser)
+    .then(res => res.json()
+    .then(data => {
+      var myPlaylists = document.getElementById('myPlaylists');
+
+      while(myPlaylists.firstChild){
+        myPlaylists.removeChild(myPlaylists.firstChild);
+      }
+
+      for(let i=0; i<data.length; i++){
+        myPlaylists.appendChild(document.createTextNode(data[i].playlist_name + ' by ' + data[i].owner + '\xa0\xa0\xa0'));
+        
+
+        var linkBtn = document.createElement('button');
+        linkBtn.innerHTML = 'Edit Playlist';
+
+        var link = document.createElement('a');
+        link.href = 'api/authenticated/personal/playlistview/' + data[i].playlist_name;
+
+        linkBtn.addEventListener('click', () => {openPlaylist(data[i].playlist_name, currentUser, currentUser)});
+        myPlaylists.appendChild(linkBtn);
+        myPlaylists.appendChild(document.createElement('br'));
+        
+
+        myPlaylists.appendChild(document.createElement('br'));
+        myPlaylists.appendChild(document.createElement('br'));
+      }
+
+      
+
+    }))
+  }
+
+  // get user email
+  // from user email, get role of the user
+  // take Tisal's method to get username
+  // my playlists: ...
 
   return (
     <body onLoad={publicPlaylists()}>
       <div id="unauthPlaylists">
         <div>
-          <div>
+          <div> 
             <br />
             <Link to="/dashboard" style={{ marginLeft: "20px" }}>
               Dashboard
@@ -192,12 +251,33 @@ export const UnauthPlaylists = () => {
           ></ol>
         </div>
       </div>
+
+      {auth.currentUser !== null && role === 'active-user' &&
+      <center>
+      <div onLoad={getCurrentUser()}>
+      <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
+              My Playlists:<br></br>
+            </span>
+            <ol
+              id="myPlaylists"
+              style={{
+                paddingLeft: "0",
+                textAlign: "center",
+                display: "inline-block",
+              }}>
+
+              </ol>
+      </div>
+      </center>
+      }
+
+      {auth.currentUser !== null && role === 'active-user' &&
       <div id="searchBar">
         <br />
             
         <center>
         <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
-              Create Playlists:<br></br>
+              <br /> <br />Create Playlists:<br></br>
             </span>
           <input
             type="text"
@@ -217,7 +297,7 @@ export const UnauthPlaylists = () => {
             Create
           </button>
         </center>
-      </div>
+      </div>}
     </body>
   );
 };
