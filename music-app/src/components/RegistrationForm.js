@@ -35,6 +35,7 @@ export const RegistrationForm = () => {
     } catch (error) {
       console.log(error.message);
       userExists = true;
+      alert(error.message);
     }
   };
 

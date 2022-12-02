@@ -431,7 +431,7 @@ app.get("/api/authenticated/playlists/list-names", (req, res) => {
 });
 //Shows list of only public playlist
 app.get("/api/playlists/list-names", (req, res) => {
-  let sql = `SELECT playlist_name, owner FROM playlist_data WHERE status = FALSE`;
+  let sql = `SELECT playlist_name, owner, avg_rating FROM playlist_data WHERE status = FALSE`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -440,7 +440,7 @@ app.get("/api/playlists/list-names", (req, res) => {
 });
 //Shows list of your own playlist
 app.get("/api/playlists/list-names/:owner", (req, res) => {
-  let sql = `SELECT playlist_name, owner FROM playlist_data WHERE owner ='${req.params.owner}'`;
+  let sql = `SELECT playlist_name, owner, avg_rating FROM playlist_data WHERE owner ='${req.params.owner}'`;
   db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
@@ -517,7 +517,7 @@ app.post("/api/authenticated/playlist/addtrack/:pName/:tID", (req, res) => {
   //Updating last edited
   let date = new Date().toISOString().slice(0, 19).replace("T", " ");
   date = date.toString();
-  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`;
+  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pName}'`;
   db.query(sql2, (err, result) => {});
 });
 
@@ -530,6 +530,11 @@ app.delete(
       if (err) throw err;
       res.send(result);
     });
+      //Updating last edited
+  let date = new Date().toISOString().slice(0, 19).replace("T", " ");
+  date = date.toString();
+  let sql2 = `UPDATE playlist_data SET last_edited = "${date}" WHERE playlist_name = '${req.params.pname}'`;
+  db.query(sql2, (err, result) => {});
   }
 );
 
@@ -595,6 +600,7 @@ app.get("/api/playlist/rating/average/:pname", (req, res) => {
     if(avg==null){
       avg = 0;
     }
+    
   
   let sql2 = `UPDATE playlist_data SET avg_rating = "${avg}" WHERE playlist_name = '${req.params.pname}'`;
   db.query(sql2, (err, result) => {

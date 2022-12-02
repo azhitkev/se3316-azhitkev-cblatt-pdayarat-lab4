@@ -37,15 +37,31 @@ export const UnauthPlaylists = () => {
           playlists.removeChild(playlists.firstChild);
         }
 
-        for (let i = 0; i < data.length; i++) {
-          playlists.appendChild(
-            document.createTextNode(
-              data[i].playlist_name +
-                " by " +
-                data[i].owner +
-                "\xa0\xa0\xa0\xa0"
-            )
-          );
+        for (let i = 0; i < 10; i++) {
+          
+          if(data[i].avg_rating === null){
+            playlists.appendChild(
+              document.createTextNode(
+                data[i].playlist_name +
+                  " by " +
+                  data[i].owner +
+                  "\xa0\xa0\xa0\xa0"
+              )
+            );
+          }
+          else{
+            playlists.appendChild(
+              document.createTextNode(
+                data[i].playlist_name +
+                  " by " +
+                  data[i].owner + ' (average rating: ' + data[i].avg_rating + '/10)' +
+                  "\xa0\xa0\xa0\xa0"
+              )
+            );
+
+          }
+          
+          
 
           var infoBtn = document.createElement("button");
           infoBtn.style.height = "20px";
@@ -189,11 +205,28 @@ export const UnauthPlaylists = () => {
         }
 
         for (let i = 0; i < data.length; i++) {
-          myPlaylists.appendChild(
-            document.createTextNode(
-              data[i].playlist_name + " by " + data[i].owner + "\xa0\xa0\xa0"
-            )
-          );
+
+          if(data[i].avg_rating === null){
+            myPlaylists.appendChild(
+              document.createTextNode(
+                data[i].playlist_name +
+                  " by " +
+                  data[i].owner +
+                  "\xa0\xa0\xa0\xa0"
+              )
+            );
+          }
+          else{
+            myPlaylists.appendChild(
+              document.createTextNode(
+                data[i].playlist_name +
+                  " by " +
+                  data[i].owner + ' (average rating: ' + data[i].avg_rating + '/10)' +
+                  "\xa0\xa0\xa0\xa0"
+              )
+            );
+
+          }
 
           var linkBtn = document.createElement("button");
           linkBtn.innerHTML = "Edit Playlist";
@@ -212,6 +245,7 @@ export const UnauthPlaylists = () => {
             openPlaylist(data[i].playlist_name, currentUser, currentUser);
           });
           myPlaylists.appendChild(linkBtn);
+          myPlaylists.appendChild(document.createElement("br"));
           myPlaylists.appendChild(document.createElement("br"));
           
           
@@ -244,7 +278,7 @@ export const UnauthPlaylists = () => {
             </span>
             <br />
             <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
-              Publicly accessible playlists created by other users
+              Publicly accessible playlists
             </span>
           </center>
         </div>
@@ -292,11 +326,11 @@ export const UnauthPlaylists = () => {
 
       {auth.currentUser !== null && role === "active-user" && (
         <div id="searchBar">
-          <br />
+          
 
           <center>
             <span style={{ fontSize: "25px", fontFamily: "Copperplate" }}>
-              <br /> <br />
+              
               Create Playlists:<br></br>
             </span>
             <input
