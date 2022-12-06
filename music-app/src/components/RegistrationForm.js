@@ -73,7 +73,6 @@ export const RegistrationForm = () => {
     }
   };
 
-<<<<<<< Updated upstream
   //   const handleRegisterBtn = () => {
   //     axios
   //       .post("http://localhost:4000/register", {
@@ -86,20 +85,6 @@ export const RegistrationForm = () => {
   //         console.log(response);
   //       });
   //   };
-=======
-  const handleRegisterBtn = () => {
-    axios
-      .post("/register", {
-        first_name: firstNameReg,
-        last_name: lastNameReg,
-        email: emailReg,
-        password: passwordReg,
-      })
-      .then((response) => {
-        console.log(response);
-      });
-  };
->>>>>>> Stashed changes
 
   return (
     <div className="form">
