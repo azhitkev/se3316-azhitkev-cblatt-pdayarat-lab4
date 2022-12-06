@@ -23,7 +23,7 @@ const PublicPlaylistView = () => {
   useEffect(() => {
     getPlaylists();
     if (auth.currentUser !== null) {
-      Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
+      Axios.get(`/roleAndUsername/${auth.currentUser.email}`).then(
         (response) => {
           setRole(response.data[0].role);
         }
@@ -42,7 +42,7 @@ const PublicPlaylistView = () => {
   //Gets all tracks in playlist
   const getPlaylists = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/playlists/tracks/${name.toLowerCase()}`
+      `/api/playlists/tracks/${name.toLowerCase()}`
     );
     result = await result.json();
     setplaylists(result);
@@ -51,7 +51,7 @@ const PublicPlaylistView = () => {
   ///Checks playlist information and also sets status
   const playlistInfo = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/get-description/${name.toLowerCase()}`
+      `/api/authenticated/playlist/get-description/${name.toLowerCase()}`
     );
     result = await result.json();
     if (result[0].status == 1) {
@@ -66,7 +66,7 @@ const PublicPlaylistView = () => {
   //shows coments on playlist
   const getComments = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/playlist/comments/${name.toLowerCase()}`
+      `/api/playlist/comments/${name.toLowerCase()}`
     );
     result = await result.json();
     setcmnts(result);

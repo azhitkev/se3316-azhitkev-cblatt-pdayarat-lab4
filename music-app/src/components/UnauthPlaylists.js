@@ -12,7 +12,7 @@ export const UnauthPlaylists = () => {
     // console.log("ayoooooo", auth.currentUser.email);
     if (auth.currentUser !== null) {
       Axios.get(
-        `http://localhost:4000/roleAndUsername/${auth.currentUser.email}`
+        `/roleAndUsername/${auth.currentUser.email}`
       ).then((response) => {
         setRole(response.data[0].role);
         // setUser(response.data[0].userName);
@@ -84,22 +84,36 @@ export const UnauthPlaylists = () => {
   function openPlaylist(playlistNm, owner, userName, role) {
     if (role == "admin") {
       var link = document.createElement("a");
-      link.href = "http://localhost:3000/api/playlistview/" + playlistNm;
+      var inputString = window.location.href;
+      var splitString = inputString.split('/');
+      var outputString = splitString.slice(2, 3).join('/');
+      link.href = "http://" + outputString + "/api/playlistview/" + playlistNm;
       link.click();
     } else if (owner != userName && role == "active-user") {
       var link = document.createElement("a");
+      var inputString = window.location.href;
+      var splitString = inputString.split('/');
+      var outputString = splitString.slice(2, 3).join('/');
       link.href =
-        "http://localhost:3000/api/authenticated/playlistview/" + playlistNm;
+        "http://" + outputString + "/api/authenticated/playlistview/" + playlistNm;
       link.click();
     } else if (owner == userName) {
       var link = document.createElement("a");
+
+      var inputString = window.location.href;
+      var splitString = inputString.split('/');
+      var outputString = splitString.slice(2, 3).join('/');
+
       link.href =
-        "http://localhost:3000/api/authenticated/personal/playlistview/" +
+        "http://" + outputString + "/api/authenticated/personal/playlistview/" +
         playlistNm;
       link.click();
     } else {
       var link = document.createElement("a");
-      link.href = "http://localhost:3000/api/playlistview/" + playlistNm;
+      var inputString = window.location.href;
+      var splitString = inputString.split('/');
+      var outputString = splitString.slice(2, 3).join('/');
+      link.href = "http://" + outputString + "/api/playlistview/" + playlistNm;
       link.click();
     }
   }

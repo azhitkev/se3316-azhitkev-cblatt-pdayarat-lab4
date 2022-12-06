@@ -15,7 +15,7 @@ export const Dashboard = () => {
     console.log("WE ARE HERE", auth.currentUser.email);
     if (auth.currentUser !== null) {
       Axios.get(
-        `http://localhost:4000/roleAndUsername/${auth.currentUser.email}`
+        `/roleAndUsername/${auth.currentUser.email}`
       ).then((response) => {
         setRole(response.data[0].role);
         setUser(response.data[0].username);

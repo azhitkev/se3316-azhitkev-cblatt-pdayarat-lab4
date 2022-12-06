@@ -10,7 +10,7 @@ export const PolicySecurity = () => {
 
   useEffect(() => {
     if (auth.currentUser !== null) {
-      Axios.get(`http://localhost:4000/roleAndUsername/${auth.currentUser.email}`).then(
+      Axios.get(`/roleAndUsername/${auth.currentUser.email}`).then(
         (response) => {
           setRole(response.data[0].role);
         }
@@ -46,7 +46,10 @@ export const PolicySecurity = () => {
 
     function reloadPage(){
       var link = document.createElement('a');
-      link.href = 'localhost:3000/security-and-privacy';
+      var inputString = window.location.href;
+      var splitString = inputString.split('/');
+      var outputString = splitString.slice(2, 3).join('/');
+      link.href = 'http://' + outputString + '/security-and-privacy';
       link.click();
     }
     

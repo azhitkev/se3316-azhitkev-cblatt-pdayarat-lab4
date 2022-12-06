@@ -28,7 +28,7 @@ export default function AdminPage() {
 
   const getAllUsers = async () => {
     console.log(auth);
-    let result = await fetch(`http://localhost:4000/userInfo`);
+    let result = await fetch(`/userInfo`);
     result = await result.json();
     setUsers(result);
   };
@@ -38,9 +38,9 @@ export default function AdminPage() {
       const userName = user;
       const roleValue = dropDownValue;
       console.log(roleValue);
-      fetch(`http://localhost:4000/admin/${userName}/${roleValue}`);
+      fetch(`/admin/${userName}/${roleValue}`);
       let result = await fetch(
-        `http://localhost:4000/admin/${userName}/${roleValue}`,
+        `/admin/${userName}/${roleValue}`,
         {
           method: "POST",
         }

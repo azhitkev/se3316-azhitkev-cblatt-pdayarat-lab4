@@ -20,7 +20,7 @@ export function LoginPage() {
   // //checks the role of the user upon login (to see whether they should have admin priviledges or regular user priviledges)
   const checkUserRole = async () => {
     userRole = await fetch(
-      `http://localhost:4000/userInfo/${auth.currentUser.email}`
+      `/userInfo/${auth.currentUser.email}`
     );
     userRole = await userRole.json();
     console.log("THE USER ROLE IS:" + userRole);
@@ -42,7 +42,7 @@ export function LoginPage() {
     });
     if (auth.currentUser !== null) {
       Axios.get(
-        `http://localhost:4000/roleAndUsername/${auth.currentUser.email}`
+        `/roleAndUsername/${auth.currentUser.email}`
       ).then((response) => {
         setRole(response.data[0].role);
         // setUser(response.data[0].userName);

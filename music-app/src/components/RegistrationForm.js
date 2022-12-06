@@ -44,7 +44,7 @@ export const RegistrationForm = () => {
     if (userExists === false) {
       console.log("not in here");
       axios
-        .post("http://localhost:4000/register", {
+        .post("/register", {
           username: usernameReg,
           email: emailReg,
           password: passwordReg,
@@ -72,19 +72,6 @@ export const RegistrationForm = () => {
       setConfirmPassword(value);
     }
   };
-
-  //   const handleRegisterBtn = () => {
-  //     axios
-  //       .post("http://localhost:4000/register", {
-  //         first_name: firstNameReg,
-  //         last_name: lastNameReg,
-  //         email: emailReg,
-  //         password: passwordReg,
-  //       })
-  //       .then((response) => {
-  //         console.log(response);
-  //       });
-  //   };
 
   return (
     <div className="form">
