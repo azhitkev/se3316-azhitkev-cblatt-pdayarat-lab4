@@ -31,7 +31,7 @@ const AuthPlaylistView = () => {
   //Gets all tracks in playlist
   const getPlaylists = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/playlists/tracks/${name.toLowerCase()}`
+      `/api/playlists/tracks/${name.toLowerCase()}`
     );
     result = await result.json();
     setplaylists(result);
@@ -50,7 +50,7 @@ const AuthPlaylistView = () => {
   ///Checks playlist information and also sets status
   const playlistInfo = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/get-description/${name.toLowerCase()}`
+      `/api/authenticated/playlist/get-description/${name.toLowerCase()}`
     );
     result = await result.json();
     if (result[0].status == 1) {
@@ -66,12 +66,12 @@ const AuthPlaylistView = () => {
   const changeStatusInfo = async (id) => {
     if (id == "Public") {
       let result1 = await fetch(
-        `http://localhost:4000/api/authenticated/playlist/status/private/${name.toLowerCase()}`
+        `/api/authenticated/playlist/status/private/${name.toLowerCase()}`
       );
       window.location.reload(false);
     } else if (id == "Private") {
       let result2 = await fetch(
-        `http://localhost:4000/api/authenticated/playlist/status/public/${name.toLowerCase()}`
+        `/api/authenticated/playlist/status/public/${name.toLowerCase()}`
       );
       window.location.reload(false);
     } else {
@@ -82,7 +82,7 @@ const AuthPlaylistView = () => {
   //shows coments on playlist
   const getComments = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/playlist/comments/${name.toLowerCase()}`
+      `/api/playlist/comments/${name.toLowerCase()}`
     );
     result = await result.json();
     setcmnts(result);
@@ -90,7 +90,7 @@ const AuthPlaylistView = () => {
   //add coments to playlist;
   const addComments = async () => {
     let result = await fetch(
-      `http://localhost:4000/api/authenticated/playlist/comments/${name.toLowerCase()}/${user}/${updated}/${update}`,
+      `/api/authenticated/playlist/comments/${name.toLowerCase()}/${user}/${updated}/${update}`,
       {
         method: "Post",
       }
