@@ -55,6 +55,6 @@
   },
   "proxy": "ec2-3-88-160-127.compute-1.amazonaws.com:4000",
   "devServer": {
-    "allowedHosts": "all"
+    "disableHostCheck": true
   }
 }
